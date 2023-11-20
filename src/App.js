@@ -4,6 +4,7 @@ import Profile from "./profile";
 import Search from "./search";
 import NavBar from "./NavBar/index.js";
 import Login from "./login/index.js";
+import ProfileSpecific from "./profile/profileUID/index.js";
 
 function App() {
   const screen = "labs";
@@ -16,6 +17,7 @@ function App() {
             <Route path="/" element={<Navigate to="/Home" />} />
             <Route path="/Login" element={<Login />} />
             <Route path="/Home" element={<Home />} />
+            <Route path="/Profile/:id" element={<ProfileSpecific />} />
             <Route path="/Profile" element={<Profile />} />
             <Route path="/Search" element={<Search />} />
           </Routes>
