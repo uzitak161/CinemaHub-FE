@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 function StatModal({ setModal }) {
 
-    const followers = [{ id: 1, name: 'John Doe', image: 'https://via.placeholder.com/150' }, { id: 2, name: 'Jane Doe', image: 'https://via.placeholder.com/150' }, { name: 'Jane Doe', image: 'https://via.placeholder.com/150' }, { name: 'Jane Doe', image: 'https://via.placeholder.com/150' }];
+    const followers = [{ id: 1, name: 'John Doe', image: 'https://via.placeholder.com/150' }, { id: 2, name: 'Jane Doe', image: 'https://via.placeholder.com/150' }];
 
     return (
         <div className='row'>
@@ -14,7 +14,9 @@ function StatModal({ setModal }) {
                 <ul>
                     {followers.map((follower) => {
                         return (
-                            <Link to={`/profile/${follower.id}`}>
+                            <Link
+                                onClick={() => { setModal(false) }}
+                                to={`/profile/${follower.id}`}>
                                 <div className="row">
                                     <div className="col">
                                         <img src={follower.image} alt="follower" />
@@ -35,7 +37,9 @@ function StatModal({ setModal }) {
                 <ul>
                     {followers.map((follower) => {
                         return (
-                            <Link to={`/profile/${follower.id}`}>
+                            <Link
+                                onClick={() => { setModal(false) }}
+                                to={`/profile/${follower.id}`}>
                                 <div className="row">
                                     <div className="col">
                                         <img src={follower.image} alt="follower" />

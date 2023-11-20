@@ -16,7 +16,6 @@ function generateAllUserReviews(reviews) {
     </div>
 
     )
-
 }
 
 
@@ -72,7 +71,7 @@ function Profile() {
     const [loggedIn, setStatus] = useState(true)
     const [reviews, setReviews] = useState([{ movieTitle: "Pulp Fiction", rating: 5, review: "This movie was great!" }, { movieTitle: "Pulp Fiction", rating: 5, review: "This movie was great!" }])
     const [recommendations, setRecommendations] = useState([{ movieTitle: "Pulp Fiction", avg_rating: 4.78, description: "Movie Description" }, { movieTitle: "Pulp Fiction", avg_rating: 4.78, description: "Movie Description" }])
-    const [modalOpen, setModalOpen] = useState(true);
+    const [modalOpen, setModalOpen] = useState(false);
 
 
     // Lookup the users profile image if they have one (optional)
@@ -95,6 +94,14 @@ function Profile() {
             overflow: 'auto', // scroll if content is too long
         },
     };
+
+    const getRecent = (array) => {
+        if (array.length < 3) {
+            return array;
+        } else {
+            return array.slice(0, 3);
+        }
+    }
 
 
     if (loggedIn) {
@@ -144,14 +151,21 @@ function Profile() {
                     <div className='row'>
                         <div className='col'>
                             <h2> Your Recent Reviews </h2>
-                            {generateAllUserReviews(reviews)}
+                            {generateAllUserReviews(getRecent(reviews))}
                         </div>
                     </div>
 
                 </div>
 
-                <div className='p-2 d-flex bd-highlight center-text'>
-                    <h2> Your Recent Reviews </h2>
+                <div className='p-2 flex-grow-1 bd-highlight center-text'>
+                    <div className='container-fluid'>
+                        <div className='row'>
+                            <div className='col'>
+                                <h2> All Reviews </h2>
+                                {generateAllUserReviews(reviews)}
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>
