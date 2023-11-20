@@ -9,7 +9,7 @@ function App() {
   const screen = "labs";
   return (
     <HashRouter>
-      <div>
+      <div className="">
         <NavBar />
         <div style={{ marginTop: 56 }}>
           <Routes>

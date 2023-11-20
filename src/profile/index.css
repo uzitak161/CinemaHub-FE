@@ -1,3 +1,32 @@
+html,
+body {
+    width: 100%;
+    justify-content: left !important;
+}
+
+
+.center-text {
+    text-align: center;
+}
+
+.modal-quit {
+    width: 50px !important;
+    height: 50px !important;
+    text-align: center;
+    margin: 20px;
+}
+
+.stats-modal {
+    top: "50%";
+    left: "50%";
+    right: "auto";
+    bottom: "auto";
+    marginRight: "-50%";
+    transform: "translate(-50%, -50%)";
+    backgroundColor: "white";
+    width: 400;
+}
+
 .bio-area {
     display: flex;
     flex-direction: column;
