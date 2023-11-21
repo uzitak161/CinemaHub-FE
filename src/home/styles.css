@@ -1,0 +1,28 @@
+.wd-image-container {
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Style for the image */
+.wd-image-container img {
+    height: 600px; /* Make the image fill the container */
+    overflow-x: hidden;
+}
+
+.wd-image-title-text {
+    width: 100%;
+    color: white;
+    background-color: grey;
+    text-align: center;
+    font-weight: bold;
+    font-size: 4.0em;
+}
+
+.wd-image-sub-text {
+    width: 100%;
+    color: white;
+    background-color: grey;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.5em;
+}

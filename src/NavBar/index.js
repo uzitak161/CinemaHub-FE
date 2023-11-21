@@ -7,10 +7,9 @@ function NavBar() {
     if (pathname.pathname.includes("/login")) {
         return null;
     } else {
-
         return (
             <nav className="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
-                <a className="ms-2 navbar-brand" href="#">CinemaHub</a>
+                <Link key={"home"} to={`/home`} className="ms-2 navbar-brand">CinemaHub</Link>
                 <div className="collapse navbar-collapse">
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item active">
@@ -23,7 +22,7 @@ function NavBar() {
                             <Link key={"search"} to={`/search`} className="nav-link">Search</Link>
                         </li>
                         <li className="nav-item">
-                            <Link key={"login"} to={`/login`} className="nav-link">login</Link>
+                            <Link key={"login"} to={`/login`} className="nav-link">Login</Link>
                         </li>
 
                     </ul>
