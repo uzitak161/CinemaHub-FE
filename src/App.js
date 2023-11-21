@@ -3,8 +3,8 @@ import Home from "./home/index";
 import Profile from "./profile";
 import Search from "./search";
 import NavBar from "./NavBar/index.js";
-import Login from "./login/index.js";
 import ProfileSpecific from "./profile/profileUID/index.js";
+import Login from "./login/index.js";
 
 function App() {
   const screen = "labs";
@@ -15,11 +15,11 @@ function App() {
         <div style={{ marginTop: 56 }}>
           <Routes>
             <Route path="/" element={<Navigate to="/Home" />} />
-            <Route path="/Login" element={<Login />} />
             <Route path="/Home" element={<Home />} />
             <Route path="/Profile/:id" element={<ProfileSpecific />} />
             <Route path="/Profile" element={<Profile />} />
             <Route path="/Search" element={<Search />} />
+            <Route path="/Login" element={<Login />} />
           </Routes>
         </div>
       </div>

@@ -1,0 +1,34 @@
+.wd-image-title-text {
+    width: 100%;
+    color: white;
+    background-color: grey;
+    text-align: center;
+    font-weight: bold;
+    font-size: 4.0em;
+}
+
+.wd-image-sub-text {
+    width: 100%;
+    color: white;
+    background-color: grey;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+.wd-thumbnail-pane-image {
+    width: auto;
+    height: 250px;
+    object-fit: cover;
+}
+
+.wd-font-size-large {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.wd-capability {
+    width: auto;
+    height: 250px;
+    object-fit: cover;
+}
