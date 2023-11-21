@@ -13,7 +13,12 @@ function ReviewThumbnailPane({review_likes_username, pane_title}) {
                             className={"text-decoration-none text-white"}
                         >
                             <div className={"text-nowrap wd-font-size-large"}>{review.movie_title}</div>
-                            <div className={"text-secondary"}>{review.username}</div>
+                            <Link
+                                key={review.username}
+                                to={`/profile/${review.username}`}
+                                className={"text-decoration-none text-secondary"}>
+                                {review.username}
+                            </Link>
                             <div>{review.review}</div>
                         </Link>
                     </div>
