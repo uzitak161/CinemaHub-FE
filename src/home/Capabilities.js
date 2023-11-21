@@ -13,14 +13,16 @@ function Capabilities() {
         }
     ]
     return (
-        <div className={"d-flex flex-row w-100"}>
+        <div className={"d-flex flex-column"}>
             <h3 className={"pe-2"}>CinemaHub Enables You...</h3>
-            {capabilities.map((capability, index) => (
-                <div style={{maxWidth: 300}} key={index} className={"d-flex flex-row rounded align-items-center p-3 text-white bg-secondary m-1 pt-0 pb-0"}>
-                    <div className={"m-2"}>{capability.icon}</div>
-                    <div className={"ms-2"}>{capability.description}</div>
-                </div>
-            ))}
+            <div className={"d-flex flex-row overflow-hidden"}>
+                {capabilities.map((capability, index) => (
+                    <div className={"d-flex flex-row rounded align-items-center p-3 text-white bg-secondary m-1 pt-0 pb-0"}>
+                        <div className={"m-2"}>{capability.icon}</div>
+                        <div className={"ms-2"}>{capability.description}</div>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }

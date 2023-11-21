@@ -26,3 +26,9 @@
     font-size: 1.5em;
     font-weight: bold;
 }
+
+.wd-capability {
+    width: auto;
+    height: 250px;
+    object-fit: cover;
+}
