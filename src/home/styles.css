@@ -1,14 +1,3 @@
-.wd-image-container {
-    position: relative;
-    overflow-x: hidden;
-}
-
-/* Style for the image */
-.wd-image-container img {
-    height: 600px; /* Make the image fill the container */
-    overflow-x: hidden;
-}
-
 .wd-image-title-text {
     width: 100%;
     color: white;
@@ -25,4 +14,15 @@
     text-align: center;
     font-weight: bold;
     font-size: 1.5em;
+}
+
+.wd-thumbnail-pane-image {
+    width: auto;
+    height: 250px;
+    object-fit: cover;
+}
+
+.wd-font-size-large {
+    font-size: 1.5em;
+    font-weight: bold;
 }
