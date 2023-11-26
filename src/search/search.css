@@ -10,3 +10,25 @@
 
 }
 
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+}
+
+.profile-pic {
+    text-decoration: none;
+    color: black;
+}
+
+.profile-pic:hover {
+    color: darkgrey;
+}
+
+
+
+
+
+

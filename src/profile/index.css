@@ -61,3 +61,11 @@ body {
 .stars {
     color: #f1c40f;
 }
+
+.edit-profile {
+    opacity: 0;
+}
+
+.avatar:hover {
+    color : #f1c40f;
+}

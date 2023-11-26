@@ -1,10 +1,11 @@
 
 import { useState } from 'react';
-import { FaUserAlt } from 'react-icons/fa';
+import { FaPencilAlt, FaUserAlt } from 'react-icons/fa';
 import './index.css';
 import { Link } from "react-router-dom";
 import Modal from "react-modal";
 import StatModal from './statModal';
+import EditModal from './editModal';
 
 
 
@@ -71,7 +72,8 @@ function Profile() {
     const [loggedIn, setStatus] = useState(true)
     const [reviews, setReviews] = useState([{ movieTitle: "Pulp Fiction", rating: 5, review: "This movie was great!" }, { movieTitle: "Pulp Fiction", rating: 5, review: "This movie was great!" }])
     const [recommendations, setRecommendations] = useState([{ movieTitle: "Pulp Fiction", avg_rating: 4.78, description: "Movie Description" }, { movieTitle: "Pulp Fiction", avg_rating: 4.78, description: "Movie Description" }])
-    const [modalOpen, setModalOpen] = useState(false);
+    const [statModalOpen, setStatModalOpen] = useState(false);
+    const [EditModalOpen, setEditModalOpen] = useState(false);
 
 
     // Lookup the users profile image if they have one (optional)
@@ -111,8 +113,8 @@ function Profile() {
                     <div className='row'>
                         <div className='col'>
                             <div className='bio-area form-group'>
-                                {image ? image : <FaUserAlt className='avatar' />}
-                                <div onClick={() => setModalOpen(true)} className="p-2 mt-2 bg-primary d-flex justify-content-between rounded text-white stats">
+                                {image ? image : <FaUserAlt className='avatar' onClick={() => setEditModalOpen(true)} />}
+                                <div onClick={() => setStatModalOpen(true)} className="p-2 mt-2 bg-primary d-flex justify-content-between rounded text-white stats">
                                     <div className="d-flex flex-column mx-2 stats">
                                         <span className="">Followers</span>
                                         <span className="number">{followers}</span>
@@ -129,11 +131,20 @@ function Profile() {
                                     </div>
                                 </div>
                                 <Modal
-                                    isOpen={modalOpen}
-                                    onRequestClose={() => setModalOpen(false)}
+                                    isOpen={statModalOpen}
+                                    onRequestClose={() => setStatModalOpen(false)}
                                     style={modalStyle}
                                 >
-                                    <StatModal setModal={setModalOpen} />
+                                    <StatModal setModal={setStatModalOpen} />
+
+
+                                </Modal>
+                                <Modal
+                                    isOpen={EditModalOpen}
+                                    onRequestClose={() => setEditModalOpen(false)}
+                                    style={modalStyle}
+                                >
+                                    <EditModal setModal={setEditModalOpen} />
 
 
                                 </Modal>
