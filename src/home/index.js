@@ -9,7 +9,7 @@ import review_username_movie from "./TestImages/TestReviewData.js";
 function Home() {
     console.log(review_username_movie);
     // TODO can be removed once login is implemented and flipped to false for testing
-    const loggedIn = false;
+    const loggedIn = true;
 
     const username = "John Doe";
     const top_rated_thrillers = img_title_id;

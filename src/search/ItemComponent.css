@@ -1,0 +1,36 @@
+/* Movie styles */
+/* .item-container img {
+    width: 100%;
+    height: auto;
+    transition: filter 0.3s;
+} */
+
+.movie-container {
+    /* position: relative; */
+    /* cursor: pointer; */
+    /* width: 250px; */
+    margin: 10px;
+}
+
+.movie-container img {
+    width: 100%;
+    height: auto;
+    transition: filter 0.3s;
+}
+
+.movie-container img.darken {
+    filter: brightness(50%);
+}
+
+.movie-title {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 20px;
+}
+
+/* User styles */
+/* .user-info {
+    /* Style for user information */
