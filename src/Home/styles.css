@@ -32,3 +32,9 @@
     height: 250px;
     object-fit: cover;
 }
+
+.wd-star-rating {
+    right: 0;
+    font-size: 1.5em;
+    display: block;
+}

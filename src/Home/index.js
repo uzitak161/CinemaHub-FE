@@ -63,7 +63,7 @@ function Home() {
             return b.rating - a.rating;
         });
 
-        const id_and_images = [];
+        let id_and_images = [];
         for (const review of reviews) {
             const movieObj = await omdbClient.findMovieById(review.omdbMovieId);
             const id_and_image = {};
@@ -73,6 +73,7 @@ function Home() {
             id_and_images.push(id_and_image);
         }
         console.log(id_and_images)
+        id_and_images = id_and_images.splice(0, 20)
         setHighRatings(id_and_images);
     }
 

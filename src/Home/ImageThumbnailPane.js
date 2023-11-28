@@ -6,7 +6,7 @@ function ImageThumbnailPane({ img_title_id, pane_title }) {
     return (
         <div className={"d-flex flex-column pt-5"}>
             <h3>{pane_title}</h3>
-            <div className={"d-flex flex-row overflow-hidden"}>
+            <div className={"d-flex flex-row overflow-auto"}>
                 {img_title_id.map((image, index) => (
                     <Link
                         key={index}

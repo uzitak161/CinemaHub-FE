@@ -21,6 +21,11 @@ export const findMovieById = async (movieId) => {
     return response.data;
 }
 
+export const findMovieByOMDBId = async (omdbID) => {
+    const response = await request.get(`${MOVIES_API}/omdb/${omdbID}`);
+    return response.data;
+}
+
 export const findMovieByTitle = async (title) => {
     const response = await request.get(`${MOVIES_API}/title/${title}`);
     return response.data;
