@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import MovieResults from './movies';
-import UserResults from './users';
 import GridWithPagination from './GridWithPagination';
-import mockUsersData from '../MockData/users';
-import mockMoviesData from '../home/TestImages/TestMovieData';
 const API_BASE = process.env.REACT_APP_API_BASE;
 const USERS_URL = `${API_BASE}/api/users`;
 
@@ -33,15 +29,6 @@ const SearchComponent = () => {
     };
 
     const searchMovies = async (term) => {
-
-        // const options = {
-        //   method: 'GET',
-        //   url: `https://moviesdatabase.p.rapidapi.com/titles/search/title/${term}`,
-        //   headers: {
-        //     'X-RapidAPI-Key': '964be964c7mshdfeb3b0560554e4p1dcb01jsn1021b972c33a',
-        //     'X-RapidAPI-Host': 'moviesdatabase.p.rapidapi.com'
-        //   }
-        // };
         const key = "d35a225d"
         const options = {
             method: 'GET',
@@ -60,7 +47,7 @@ const SearchComponent = () => {
     const searchUsers = (term) => {
         // Query your database for users here
         // console.log('Searching users:', term);
-        setResults(mockUsersData.filter((user) => user._username.includes(term)));
+        // setResults(mockUsersData.filter((user) => user._username.includes(term)));
         // axios.get(`${USERS_URL}/search/${term}`).then((response) => {
         //   console.log(response.data);
         // });
