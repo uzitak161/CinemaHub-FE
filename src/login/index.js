@@ -16,7 +16,7 @@ const Login = () => {
         // TODO: Implement login and signup logic/API call
         console.log(`Username: ${username}, Password: ${password}`);
 
-        // Route to home page after successful login
+        // Route to Home page after successful login
         navigate('/');
 
     };

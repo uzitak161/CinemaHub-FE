@@ -1,5 +1,5 @@
 import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
-import Home from "./home/index";
+import Home from "./Home/index";
 import Profile from "./profile";
 import Search from "./search";
 import NavBar from "./NavBar/index.js";
