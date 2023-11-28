@@ -34,23 +34,23 @@ const SearchComponent = () => {
 
     const searchMovies = async (term) => {
 
-        const options = {
-          method: 'GET',
-          url: `https://moviesdatabase.p.rapidapi.com/titles/search/title/${term}`,
-          headers: {
-            'X-RapidAPI-Key': '964be964c7mshdfeb3b0560554e4p1dcb01jsn1021b972c33a',
-            'X-RapidAPI-Host': 'moviesdatabase.p.rapidapi.com'
-          }
-        };
-        // const key = "d35a225d"
         // const options = {
-        //     method: 'GET',
-        //     url: `http://img.omdbapi.com/?apikey=${key}&s=${term}`,
+        //   method: 'GET',
+        //   url: `https://moviesdatabase.p.rapidapi.com/titles/search/title/${term}`,
+        //   headers: {
+        //     'X-RapidAPI-Key': '964be964c7mshdfeb3b0560554e4p1dcb01jsn1021b972c33a',
+        //     'X-RapidAPI-Host': 'moviesdatabase.p.rapidapi.com'
+        //   }
         // };
+        const key = "d35a225d"
+        const options = {
+            method: 'GET',
+            url: `https://www.omdbapi.com/?apikey=${key}&s=${term}`,
+        };
         try {
             const response = await axios.request(options);
-            console.log(response.data);
-            setResults(response.data.results);
+            console.log(response.data.Search);
+            setResults(response.data.Search);
         } catch (error) {
             console.error(error);
         }
@@ -75,9 +75,9 @@ const SearchComponent = () => {
                     value={searchTerm}
                     onChange={handleSearchInputChange}
                 />
-                <button onClick={() => handleSearchTypeChange('movies')}>Movies</button>
-                <button onClick={() => handleSearchTypeChange('users')}>Users</button>
-                <button onClick={handleSearch} className="mb-3">Search</button>
+                <button onClick={() => handleSearchTypeChange('movies')} className={`btn ${searchType === 'movies' ? 'btn-secondary' : 'btn-primary'}`}>Movies</button>
+                <button onClick={() => handleSearchTypeChange('users')} className={`btn ${searchType === 'users' ? 'btn-secondary' : 'btn-primary'}`}>Users</button>
+                <button onClick={handleSearch} className="btn btn-success">Search</button>
             </div>
             {/* Add filter components here */}
             <GridWithPagination items={results} type={searchType} />

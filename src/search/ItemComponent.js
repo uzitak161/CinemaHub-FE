@@ -14,10 +14,10 @@ const ItemComponent = ({ item, type }) => {
   return (
     <div className="movie-container col-3" onClick={handleClick}>
       {type === 'movies' && (
-        <Link to={`/details/${item._id}`}>
-          {item.primaryImage && <img src={item.primaryImage.url} alt={item.title}
+        <Link to={`/details/${item.imdbID}`}>
+          {item.Poster && <img src={item.Poster} alt={item.Title}
             className={"" + showOverlay ? 'darken' : ''} />}
-          {showOverlay && <div className="item-title">{item.title}</div>}
+          {showOverlay && <div className="item-title">{item.Title}</div>}
         </Link>
       )}
       {type === 'users' &&

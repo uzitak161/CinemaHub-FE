@@ -4,7 +4,7 @@ import Pagination from './Pagination'; // Assuming you have a Pagination compone
 
 const GridWithPagination = ({ items, type }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 3; // Can be adjusted
+  const itemsPerPage = 9; // Can be adjusted
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
