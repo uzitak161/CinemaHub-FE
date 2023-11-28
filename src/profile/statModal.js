@@ -1,5 +1,6 @@
 import { FaArrowRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { FaUserAlt } from "react-icons/fa";
 
 
 
@@ -16,13 +17,15 @@ function StatModal({ setModal }) {
                         return (
                             <Link
                                 onClick={() => { setModal(false) }}
-                                to={`/profile/${follower.id}`}>
-                                <div className="row">
+                                to={`/profile/${follower.id}`}
+                                style={{textDecoration: "none"}}>
+                                <div className="row mt-2">
                                     <div className="col">
-                                        <img src={follower.image} alt="follower" />
+                                        {/* <img src={follower.image} alt="follower" /> */}
+                                        <FaUserAlt className='avatar' style={{textDecoration: "none", color: "black"}}/>
                                     </div>
                                     <div className="col">
-                                        <p>{follower.name}</p>
+                                        <p style={{textDecoration: "none", color: "black"}}>{follower.name}</p>
                                     </div>
                                 </div>
                             </Link>
@@ -39,13 +42,15 @@ function StatModal({ setModal }) {
                         return (
                             <Link
                                 onClick={() => { setModal(false) }}
-                                to={`/profile/${follower.id}`}>
-                                <div className="row">
+                                to={`/profile/${follower.id}`}
+                                style={{textDecoration: "none"}}>
+                                <div className="row mt-2">
                                     <div className="col">
-                                        <img src={follower.image} alt="follower" />
+                                        {/* <img src={follower.image} alt="follower" /> */}
+                                        <FaUserAlt className='avatar' style={{textDecoration: "none", color: "black"}}/>
                                     </div>
                                     <div className="col">
-                                        <p>{follower.name}</p>
+                                        <p style={{textDecoration: "none", color: "black"}}>{follower.name}</p>
                                     </div>
                                 </div>
                             </Link>

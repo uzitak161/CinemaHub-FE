@@ -1,10 +1,11 @@
 import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
-import Home from "./home/index";
+import Home from "./Home/index";
 import Profile from "./profile";
 import Search from "./search";
 import NavBar from "./NavBar/index.js";
 import ProfileSpecific from "./profile/profileUID/index.js";
 import Login from "./login/index.js";
+import Details from "./Details";
 
 function App() {
   const screen = "labs";
@@ -20,6 +21,7 @@ function App() {
             <Route path="/Profile" element={<Profile />} />
             <Route path="/Search" element={<Search />} />
             <Route path="/Login" element={<Login />} />
+            <Route path="/Details/:did" element={<Details />} />
           </Routes>
         </div>
       </div>
