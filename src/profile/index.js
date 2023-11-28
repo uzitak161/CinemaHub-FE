@@ -1,9 +1,10 @@
 
-import { useState } from 'react';
-import { FaPencilAlt, FaUserAlt } from 'react-icons/fa';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import './index.css';
-import { Link } from "react-router-dom";
-import Modal from "react-modal";
+import { FaUserAlt, FaArrowRight } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import Modal from 'react-modal';
 import StatModal from './statModal';
 import EditModal from './editModal';
 
@@ -49,17 +50,20 @@ function generateRecommendationCard(reccomendation) {
 // We can give this a review object and it will render the review
 function generateReviewCard(review) {
 
-
+    const dateOptions = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZoneName: 'short' };
+    const formattedDate = new Date(review.createdAt).toLocaleString('en-US', dateOptions);
+    console.log(review)
     return (
         <div className="card">
             <div className="card-body">
-                <h5 className="card-title">{review.movieTitle}</h5>
+                <h5 className="card-title">Movie Title placeholder</h5>
                 <h6 className="card-subtitle mb-2 text-muted">
-                    {Array.from({ length: review.rating }, (_, index) => (
+                    {Array.from({ length: review.starRating }, (_, index) => (
                         <span className="stars" key={index}>★</span>
                     ))}
                 </h6>
-                <p className="card-text">{review.review}</p>
+                <p className="card-text">{review.text}</p>
+                <p className='float-end mb-0'>Created At: {formattedDate}</p>
             </div>
         </div>
     )
@@ -82,6 +86,18 @@ function Profile() {
     const followers = 10;
     const reviewCount = 20;
     const following = 30;
+
+    const getReviews = async () => {
+        const URL = 'http://localhost:4000/api/comments'
+        const response = await axios.get(URL);
+        setReviews(response.data)
+    }
+
+
+    useEffect(() => {
+        getReviews();
+        console.log(reviews);
+    }, [])
 
     const modalStyle = {
         content: {
@@ -148,8 +164,8 @@ function Profile() {
 
 
                                 </Modal>
-                                <input type="text" className="form-control my-2" placeholder="E-Mail" />
-                                <textarea rows="4" className="form-control my-2" cols="50" placeholder="Enter your bio here..."></textarea>
+                                <h3 className='mt-2'>User's Name</h3>
+                                <textarea readOnly rows="4" className="form-control my-2" cols="50" placeholder="Enter your bio here..." value={"Read-Only Bio Area"}></textarea>
                             </div>
                         </div>
                         <div className='col'>

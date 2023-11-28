@@ -69,3 +69,11 @@ body {
 .avatar:hover {
     color : darkgrey;
 }
+
+.stats:hover * {
+    background-color: darkgoldenrod !important;
+}
+
+.stats:hover {
+    background-color: darkgoldenrod !important;
+}
