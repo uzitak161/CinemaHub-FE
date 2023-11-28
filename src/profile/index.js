@@ -2,16 +2,12 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './index.css';
-import { FaUserAlt, FaArrowRight } from 'react-icons/fa';
+import { FaUserAlt } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import Modal from 'react-modal';
 import StatModal from './statModal';
 import EditModal from './editModal';
-
-import * as client from "../MongoDBClients/Comments/client.js";
 import * as movieclient from "../MongoDBClients/Movies/client.js";
-import * as omdbClient from "../OMDbAPI/client.js";
-
 
 
 function generateAllUserReviews(reviews) {
@@ -58,11 +54,13 @@ function generateReviewCard(review) {
 
     const dateOptions = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZoneName: 'short' };
     const formattedDate = new Date(review.createdAt).toLocaleString('en-US', dateOptions);
+
+
     return (
 
         <div className="card">
             <div className="card-body">
-                <h5 className="card-title">Movie Title placeholder</h5>
+                <h5 className="card-title">{review.movieId.title}</h5>
                 <h6 className="card-subtitle mb-2 text-muted">
                     {Array.from({ length: review.starRating }, (_, index) => (
                         <span className="stars" key={index}>★</span>
@@ -79,9 +77,13 @@ function generateReviewCard(review) {
 
 function Profile() {
 
+
+    const username = "John Doe";
+    const following = ["user5", "user4", "user2"];
+
     // This is temporary, will eventually use redux to store login status
     const [loggedIn, setStatus] = useState(true)
-    const [reviews, setReviews] = useState([{ movieTitle: "Pulp Fiction", rating: 5, review: "This movie was great!" }, { movieTitle: "Pulp Fiction", rating: 5, review: "This movie was great!" }])
+    const [reviews, setReviews] = useState([])
     const [recommendations, setRecommendations] = useState([{ movieTitle: "Pulp Fiction", avg_rating: 4.78, description: "Movie Description" }, { movieTitle: "Pulp Fiction", avg_rating: 4.78, description: "Movie Description" }])
     const [statModalOpen, setStatModalOpen] = useState(false);
     const [EditModalOpen, setEditModalOpen] = useState(false);
@@ -102,12 +104,13 @@ function Profile() {
     }
 
 
+
+
     // Lookup the users profile image if they have one (optional)
     const image = undefined;
 
     const followers = 10;
     const reviewCount = 20;
-    const following = 30;
 
     const getReviews = async () => {
         const URL = 'http://localhost:4000/api/comments'
@@ -169,7 +172,7 @@ function Profile() {
 
                                     <div className="d-flex flex-column mx-2 stats">
                                         <span className="">Following</span>
-                                        <span className="number">{following}</span>
+                                        <span className="number">{following.length}</span>
                                     </div>
                                 </div>
                                 <Modal
