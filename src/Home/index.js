@@ -5,6 +5,7 @@ import img_title_id from "./TestImages/TestMovieData.js";
 import {Link} from "react-router-dom";
 import ReviewThumbnailPane from "./ReviewThumbnailPane";
 import * as client from "../MongoDBClients/Comments/client.js";
+import * as movieclient from "../MongoDBClients/Movies/client.js";
 import * as omdbClient from "../OMDbAPI/client.js";
 import {useEffect, useState} from "react";
 
@@ -12,13 +13,12 @@ function Home() {
     // TODO can be removed once login is implemented and flipped to false for testing
     const loggedIn = true;
     const username = "John Doe";
-    const following = ["John Doe", "Jane Doe", "John Smith", "Jane Smith"];
+    const following = ["user5", "user4", "user2"];
 
     const [recentReviews, setRecentReviews] = useState([]);
     const fetchRecentReviews = async () => {
-
-        const reviews = await client.findAllComments();
-        reviews.sort((a, b) => {
+        let reviews = await client.findAllComments();
+        reviews = reviews.sort((a, b) => {
             return new Date(b.createdAt) - new Date(a.createdAt);
         });
         setRecentReviews(reviews);
@@ -26,21 +26,23 @@ function Home() {
 
     const [recentFollowerReviews, setRecentFollowerReviews] = useState([]);
     const fetchRecentFollowerReviews = async () => {
-        const reviews = await client.findAllComments();
-        reviews.filter(review => following.includes(review.username));
-        reviews.sort((a, b) => {
+        let reviews = await client.findAllComments();
+        reviews = reviews.filter(review => following.includes(review.username));
+        reviews = reviews.sort((a, b) => {
             return new Date(b.createdAt) - new Date(a.createdAt);
         });
+        reviews = reviews.slice(0, 5);
         setRecentFollowerReviews(reviews);
     }
 
     const [followerHighRatings, setFollowerHighRatings] = useState([]);
     const fetchFollowerHighRatings = async () => {
-        const reviews = await client.findAllComments();
-        reviews.filter(review => following.includes(review.username));
-        reviews.sort((a, b) => {
+        let reviews = await client.findAllComments();
+        reviews = reviews.filter(review => following.includes(review.username));
+        reviews = reviews.sort((a, b) => {
             return b.rating > a.rating;
         });
+
         const id_and_images = [];
         for (const review of reviews) {
             const movieObj = await omdbClient.findMovieById(review.movieId.omdbMovieId);
@@ -54,25 +56,44 @@ function Home() {
         setFollowerHighRatings(id_and_images);
     }
 
-    const top_rated_thrillers = img_title_id;
+    const [highRatings, setHighRatings] = useState([]);
+    const fetchHighRatings = async () => {
+        let reviews = await movieclient.findAllMovies();
+        reviews = reviews.sort((a, b) => {
+            return b.rating - a.rating;
+        });
+
+        const id_and_images = [];
+        for (const review of reviews) {
+            const movieObj = await omdbClient.findMovieById(review.omdbMovieId);
+            const id_and_image = {};
+            console.log("Movie obj " + JSON.stringify(movieObj));
+            id_and_image["_id"] = movieObj.imdbID;
+            id_and_image["img"] = movieObj.Poster;
+            id_and_images.push(id_and_image);
+        }
+        console.log(id_and_images)
+        setHighRatings(id_and_images);
+    }
+
     let panes_to_title = [
         {
             "loggedInSensitive": true,
             "thumbnailType": "movie",
             "img_title_id": followerHighRatings,
-            "pane_title": "Movies Your Follower's Rated Highly"
+            "pane_title": "Movies Your Friends's Rated Highly"
         },
         {
             "loggedInSensitive": true,
             "thumbnailType": "review",
             "img_title_id": recentFollowerReviews,
-            "pane_title": "Recent Reviews From Your Followers"
+            "pane_title": "Recent Reviews From Your Friends"
         },
         {
             "loggedInSensitive": false,
             "thumbnailType": "movie",
-            "img_title_id": top_rated_thrillers,
-            "pane_title": "Top Rated Thriller Movies"
+            "img_title_id": highRatings,
+            "pane_title": "Top Rated Reviewed Movies"
         },
         {
             "loggedInSensitive": false,
@@ -89,6 +110,7 @@ function Home() {
             fetchFollowerHighRatings();
         }
         fetchRecentReviews();
+        fetchHighRatings();
     }, []);
 
     return (
