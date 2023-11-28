@@ -18,7 +18,9 @@ function ReviewPane({pane_title, reviews, movie_title}) {
                             <span className={"text-secondary"}>{review.username}</span>
                             <div>{review.text}</div>
                             <div>
-                                {review.starRating} <span className={"me-2"}><FaStar color={"yellow"}/></span>
+                                {Array.from({ length: review.starRating }, (_, index) => (
+                                    <span style={{color: "yellow"}} key={index}>★</span>
+                                ))}
                             </div>
                         </div>
                     </Link>

@@ -1,7 +1,6 @@
 import {useParams} from "react-router-dom";
 import * as omdbClient from "../OMDbAPI/client";
-import * as mongoMovieClient from "../MongoDBClients/Movies/client";
-import * as mongoCommentClient from "../MongoDBClients/Comments/client";
+import * as reviewClient from "../MongoDBClients/Reviews/client";
 import {useEffect, useState} from "react";
 import "./styles.css";
 import ReviewPane from "./ReviewPane";
@@ -9,40 +8,44 @@ import {FaCheckCircle} from "react-icons/fa";
 
 function Details() {
     const {did} = useParams()
+
+    // TODO change this for sign in and what not
+    const [username, setUsername] = useState("user1");
+
     const [omdbDetails, setOmdbDetails] = useState({});
-    const [mongoDetails, setMongoDetails] = useState({});
     const fetchOmdbDetails = async () => {
         setOmdbDetails(await omdbClient.findMovieById(did));
-        console.log("OMDB Details " + JSON.stringify(omdbDetails));
     }
-    const fetchMongoDetails = async () => {
-        setMongoDetails(await mongoMovieClient.findMovieByOMDBId(did));
-        console.log("Mongo details " + JSON.stringify(mongoDetails));
+    const [movieReviews, setMovieReviews] = useState([]);
+    const fetchMovieReviews = async () => {
+        setMovieReviews(await reviewClient.findReviewByMovieId(did));
     }
-    // TODO change this for sign in and what not
-    const [username, setUsername] = useState("user2");
-
-    useEffect(() => {
-        fetchOmdbDetails();
-        fetchMongoDetails();
-    }, []);
 
     const [review, setReview] = useState({
-        "movieId": null,
-        "commentId": new Date().getTime(),
+        "movieId": did,
         "username": username,
         "text": "",
         "starRating": 0,
         "createdAt": new Date(),
     });
 
+    useEffect(() => {
+        fetchOmdbDetails();
+        fetchMovieReviews();
+    }, [review]);
+
     const saveReview = async () => {
-        if (username && mongoDetails && mongoDetails._id) {
-            setReview({...review, movieId: mongoDetails._id});
+        if (username) {
             console.log("Saving review" + JSON.stringify(review));
-            const response = await mongoCommentClient.createComment(review);
+            const response = await reviewClient.createReview(review);
             console.log(response);
-            setReview({})
+            setReview({
+                "movieId": did,
+                "username": username,
+                "text": "",
+                "starRating": 0,
+                "createdAt": new Date(),
+            });
             fetchOmdbDetails();
         } else {
             console.log("Please sign in to leave a review");
@@ -98,13 +101,10 @@ function Details() {
                         </div>
                     </div>}
                 <div className={"d-flex flex-column"}>
-                    {mongoDetails &&
-                        mongoDetails.comments &&
-                        omdbDetails &&
-                        omdbDetails.Title &&
+                    {movieReviews &&
                         <ReviewPane
                             pane_title={"CinemaHub Reviews"}
-                            reviews={mongoDetails.comments}
+                            reviews={movieReviews}
                             movie_title={omdbDetails.Title}
                         />}
                 </div>

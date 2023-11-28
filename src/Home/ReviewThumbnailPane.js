@@ -23,7 +23,9 @@ function ReviewThumbnailPane({pane_title, review_likes_username}) {
                             </Link>
                             <div>{review.text}</div>
                             <div className={"wd-star-rating"}>
-                                {review.starRating} <span className={"me-2"}><FaStar color={"yellow"}/></span>
+                                {Array.from({ length: review.starRating }, (_, index) => (
+                                    <span style={{color: "yellow"}} key={index}>★</span>
+                                ))}
                             </div>
                         </Link>
                     </div>

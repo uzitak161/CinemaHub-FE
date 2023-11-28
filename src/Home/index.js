@@ -1,11 +1,9 @@
 import "./styles.css";
 import Capabilities from "./Capabilities";
 import ImageThumbnailPane from "./ImageThumbnailPane";
-import img_title_id from "./TestImages/TestMovieData.js";
 import {Link} from "react-router-dom";
 import ReviewThumbnailPane from "./ReviewThumbnailPane";
-import * as client from "../MongoDBClients/Comments/client.js";
-import * as movieclient from "../MongoDBClients/Movies/client.js";
+import * as reviewClient from "../MongoDBClients/Reviews/client.js";
 import * as omdbClient from "../OMDbAPI/client.js";
 import {useEffect, useState} from "react";
 
@@ -17,58 +15,70 @@ function Home() {
 
     const [recentReviews, setRecentReviews] = useState([]);
     const fetchRecentReviews = async () => {
-        let reviews = await client.findAllComments();
+        let reviews = await reviewClient.findAllReviews();
         reviews = reviews.sort((a, b) => {
             return new Date(b.createdAt) - new Date(a.createdAt);
         });
         setRecentReviews(reviews);
     }
 
-    const [recentFollowerReviews, setRecentFollowerReviews] = useState([]);
-    const fetchRecentFollowerReviews = async () => {
-        let reviews = await client.findAllComments();
+    const [recentFollowingReviews, setRecentFollowingReviews] = useState([]);
+    const fetchRecentFollowingReviews = async () => {
+        let reviews = await reviewClient.findAllReviews();
         reviews = reviews.filter(review => following.includes(review.username));
         reviews = reviews.sort((a, b) => {
             return new Date(b.createdAt) - new Date(a.createdAt);
         });
         reviews = reviews.slice(0, 5);
-        setRecentFollowerReviews(reviews);
+        setRecentFollowingReviews(reviews);
     }
 
-    const [followerHighRatings, setFollowerHighRatings] = useState([]);
-    const fetchFollowerHighRatings = async () => {
-        let reviews = await client.findAllComments();
+    const [followingHighRatings, setFollowingHighRatings] = useState([]);
+    const fetchFollowingHighRatings = async () => {
+        let reviews = await reviewClient.findAllReviews();
         reviews = reviews.filter(review => following.includes(review.username));
         reviews = reviews.sort((a, b) => {
             return b.rating > a.rating;
         });
+        reviews = reviews.reduce((accumulator, current) => {
+            if (!accumulator.find((item) => item.movieId === current.movieId)) {
+                accumulator.push(current);
+            }
+            return accumulator;
+        }, []);
 
         const id_and_images = [];
         for (const review of reviews) {
-            const movieObj = await omdbClient.findMovieById(review.movieId.omdbMovieId);
+            const movieObj = await omdbClient.findMovieById(review.movieId);
             const id_and_image = {};
             console.log("Movie obj " + JSON.stringify(movieObj));
-            id_and_image["_id"] = movieObj.imdbID;
+            id_and_image["_id"] = review.movieId;
             id_and_image["img"] = movieObj.Poster;
             id_and_images.push(id_and_image);
         }
         console.log(id_and_images)
-        setFollowerHighRatings(id_and_images);
+        setFollowingHighRatings(id_and_images);
     }
 
     const [highRatings, setHighRatings] = useState([]);
     const fetchHighRatings = async () => {
-        let reviews = await movieclient.findAllMovies();
+        let reviews = await reviewClient.findAllReviews();
         reviews = reviews.sort((a, b) => {
             return b.rating - a.rating;
         });
+        reviews = reviews.reduce((accumulator, current) => {
+            if (!accumulator.find((item) => item.movieId === current.movieId)) {
+                accumulator.push(current);
+            }
+            return accumulator;
+        }, []);
 
         let id_and_images = [];
         for (const review of reviews) {
-            const movieObj = await omdbClient.findMovieById(review.omdbMovieId);
+            const movieObj = await omdbClient.findMovieById(review.movieId);
             const id_and_image = {};
             console.log("Movie obj " + JSON.stringify(movieObj));
-            id_and_image["_id"] = movieObj.imdbID;
+            id_and_image["_id"] = review.movieId;
             id_and_image["img"] = movieObj.Poster;
             id_and_images.push(id_and_image);
         }
@@ -81,13 +91,13 @@ function Home() {
         {
             "loggedInSensitive": true,
             "thumbnailType": "movie",
-            "img_title_id": followerHighRatings,
+            "img_title_id": followingHighRatings,
             "pane_title": "Movies Your Friends's Rated Highly"
         },
         {
             "loggedInSensitive": true,
             "thumbnailType": "review",
-            "img_title_id": recentFollowerReviews,
+            "img_title_id": recentFollowingReviews,
             "pane_title": "Recent Reviews From Your Friends"
         },
         {
@@ -107,8 +117,8 @@ function Home() {
 
     useEffect(() => {
         if (loggedIn) {
-            fetchRecentFollowerReviews();
-            fetchFollowerHighRatings();
+            fetchRecentFollowingReviews();
+            fetchFollowingHighRatings();
         }
         fetchRecentReviews();
         fetchHighRatings();

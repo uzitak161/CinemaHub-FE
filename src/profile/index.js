@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import Modal from 'react-modal';
 import StatModal from './statModal';
 import EditModal from './editModal';
-import * as movieclient from "../MongoDBClients/Movies/client.js";
+import * as reviewClient from "../MongoDBClients/Reviews/client.js";
 
 
 function generateAllUserReviews(reviews) {
@@ -90,7 +90,7 @@ function Profile() {
 
 
     const getRecommendations = async () => {
-        let reviews = await movieclient.findAllMovies();
+        let reviews = await reviewClient.findAllReviews();
         reviews = reviews.sort((a, b) => {
             return b.rating - a.rating;
         });
@@ -113,9 +113,7 @@ function Profile() {
     const reviewCount = 20;
 
     const getReviews = async () => {
-        const URL = 'http://localhost:4000/api/comments'
-        const response = await axios.get(URL);
-        setReviews(response.data)
+        setReviews(await reviewClient.findAllReviews());
     }
 
 
