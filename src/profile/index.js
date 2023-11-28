@@ -8,6 +8,10 @@ import Modal from 'react-modal';
 import StatModal from './statModal';
 import EditModal from './editModal';
 
+import * as client from "../MongoDBClients/Comments/client.js";
+import * as movieclient from "../MongoDBClients/Movies/client.js";
+import * as omdbClient from "../OMDbAPI/client.js";
+
 
 
 function generateAllUserReviews(reviews) {
@@ -33,15 +37,17 @@ function generateRecommendations(reccomendations) {
 
 function generateRecommendationCard(reccomendation) {
     return (
-        <div className="card">
-            <div className="card-body">
-                <h5 className="card-title">{reccomendation.movieTitle}</h5>
-                <h6 className="card-subtitle mb-2 text-muted">
-                    Average Rating: {reccomendation.avg_rating} <span className='stars'>★</span>
-                </h6>
-                <p className="card-text">{reccomendation.description}</p>
+        <Link to={`/details/${reccomendation.omdbMovieId}`} style={{textDecoration: "none"}} className="">
+            <div className="card">
+                <div className="card-body">
+                    <h5 className="card-title">{reccomendation.title}</h5>
+                    <h6 className="card-subtitle mb-2 text-muted">
+                        Average Rating: {reccomendation.rating} <span className='stars'>★</span>
+                    </h6>
+                    <p className="card-text">{reccomendation.description}</p>
+                </div>
             </div>
-        </div>
+        </Link>
     )
 };
 
@@ -52,8 +58,8 @@ function generateReviewCard(review) {
 
     const dateOptions = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZoneName: 'short' };
     const formattedDate = new Date(review.createdAt).toLocaleString('en-US', dateOptions);
-    console.log(review)
     return (
+
         <div className="card">
             <div className="card-body">
                 <h5 className="card-title">Movie Title placeholder</h5>
@@ -66,7 +72,8 @@ function generateReviewCard(review) {
                 <p className='float-end mb-0'>Created At: {formattedDate}</p>
             </div>
         </div>
-    )
+
+    );
 }
 
 
@@ -78,6 +85,21 @@ function Profile() {
     const [recommendations, setRecommendations] = useState([{ movieTitle: "Pulp Fiction", avg_rating: 4.78, description: "Movie Description" }, { movieTitle: "Pulp Fiction", avg_rating: 4.78, description: "Movie Description" }])
     const [statModalOpen, setStatModalOpen] = useState(false);
     const [EditModalOpen, setEditModalOpen] = useState(false);
+
+
+    const getRecommendations = async () => {
+        let reviews = await movieclient.findAllMovies();
+        reviews = reviews.sort((a, b) => {
+            return b.rating - a.rating;
+        });
+        let recs = [];
+        if (reviews.length > 3) {
+            recs = reviews.slice(0, 3);
+        } else {
+            recs = reviews;
+        }
+        setRecommendations(recs);
+    }
 
 
     // Lookup the users profile image if they have one (optional)
@@ -96,7 +118,7 @@ function Profile() {
 
     useEffect(() => {
         getReviews();
-        console.log(reviews);
+        getRecommendations();
     }, [])
 
     const modalStyle = {
@@ -114,10 +136,14 @@ function Profile() {
     };
 
     const getRecent = (array) => {
-        if (array.length < 3) {
-            return array;
+
+        let sorted = array.sort((a, b) => {
+            return new Date(b.createdAt) - new Date(a.createdAt);
+        });
+        if (sorted.length < 3) {
+            return sorted;
         } else {
-            return array.slice(0, 3);
+            return sorted.slice(0, 3);
         }
     }
 
