@@ -4,27 +4,68 @@ import ImageThumbnailPane from "./ImageThumbnailPane";
 import img_title_id from "./TestImages/TestMovieData.js";
 import {Link} from "react-router-dom";
 import ReviewThumbnailPane from "./ReviewThumbnailPane";
-import review_username_movie from "./TestImages/TestReviewData.js";
+import * as client from "../MongoDBClients/Comments/client.js";
+import * as omdbClient from "../OMDbAPI/client.js";
+import {useEffect, useState} from "react";
 
 function Home() {
-    console.log(review_username_movie);
     // TODO can be removed once login is implemented and flipped to false for testing
-    const loggedIn = false;
-
+    const loggedIn = true;
     const username = "John Doe";
+    const following = ["John Doe", "Jane Doe", "John Smith", "Jane Smith"];
+
+    const [recentReviews, setRecentReviews] = useState([]);
+    const fetchRecentReviews = async () => {
+
+        const reviews = await client.findAllComments();
+        reviews.sort((a, b) => {
+            return new Date(b.createdAt) - new Date(a.createdAt);
+        });
+        setRecentReviews(reviews);
+    }
+
+    const [recentFollowerReviews, setRecentFollowerReviews] = useState([]);
+    const fetchRecentFollowerReviews = async () => {
+        const reviews = await client.findAllComments();
+        reviews.filter(review => following.includes(review.username));
+        reviews.sort((a, b) => {
+            return new Date(b.createdAt) - new Date(a.createdAt);
+        });
+        setRecentFollowerReviews(reviews);
+    }
+
+    const [followerHighRatings, setFollowerHighRatings] = useState([]);
+    const fetchFollowerHighRatings = async () => {
+        const reviews = await client.findAllComments();
+        reviews.filter(review => following.includes(review.username));
+        reviews.sort((a, b) => {
+            return b.rating > a.rating;
+        });
+        const id_and_images = [];
+        for (const review of reviews) {
+            const movieObj = await omdbClient.findMovieById(review.movieId.omdbMovieId);
+            const id_and_image = {};
+            console.log("Movie obj " + JSON.stringify(movieObj));
+            id_and_image["_id"] = movieObj.imdbID;
+            id_and_image["img"] = movieObj.Poster;
+            id_and_images.push(id_and_image);
+        }
+        console.log(id_and_images)
+        setFollowerHighRatings(id_and_images);
+    }
+
     const top_rated_thrillers = img_title_id;
-    const followers_recent_likes = loggedIn ? img_title_id : [];
     let panes_to_title = [
         {
             "loggedInSensitive": true,
             "thumbnailType": "movie",
-            "img_title_id": followers_recent_likes,
-            "pane_title": "Your Follower's Recent Likes"
+            "img_title_id": followerHighRatings,
+            "pane_title": "Movies Your Follower's Rated Highly"
         },
         {
             "loggedInSensitive": true,
             "thumbnailType": "review",
-            "img_title_id": review_username_movie,
+            "img_title_id": recentFollowerReviews,
             "pane_title": "Recent Reviews From Your Followers"
         },
         {
@@ -36,11 +77,19 @@ function Home() {
         {
             "loggedInSensitive": false,
             "thumbnailType": "review",
-            "img_title_id": review_username_movie,
+            "img_title_id": recentReviews,
             "pane_title": "Recent Reviews on CinemaHub"
         },
     ]
-    panes_to_title = panes_to_title.filter(pane => !pane.loggedInSensitive || pane.loggedInSensitive  === loggedIn);
+    panes_to_title = panes_to_title.filter(pane => !pane.loggedInSensitive || pane.loggedInSensitive === loggedIn);
+
+    useEffect(() => {
+        if (loggedIn) {
+            fetchRecentFollowerReviews();
+            fetchFollowerHighRatings();
+        }
+        fetchRecentReviews();
+    }, []);
 
     return (
         <div>
@@ -73,21 +122,21 @@ function Home() {
                     {!loggedIn && <Capabilities/>}
                     {panes_to_title.map((pane, index) => {
                         if (pane.thumbnailType === "movie") {
-                                return (
-                                    <ImageThumbnailPane
-                                        img_title_id={pane.img_title_id}
-                                        pane_title={pane.pane_title}
-                                    />
-                                )
-                            } else if (pane.thumbnailType === "review") {
-                                return (
-                                    <ReviewThumbnailPane
-                                        review_likes_username={pane.img_title_id}
-                                        pane_title={pane.pane_title}
-                                    />
-                                )
-                            }
-                        })}
+                            return (
+                                <ImageThumbnailPane
+                                    img_title_id={pane.img_title_id}
+                                    pane_title={pane.pane_title}
+                                />
+                            )
+                        } else if (pane.thumbnailType === "review") {
+                            return (
+                                <ReviewThumbnailPane
+                                    review_likes_username={pane.img_title_id}
+                                    pane_title={pane.pane_title}
+                                />
+                            )
+                        }
+                    })}
                 </div>
             </div>
         </div>
