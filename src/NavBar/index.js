@@ -1,8 +1,35 @@
-import { Link } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import * as clientUser from "../MongoDBClients/Users/client";
+import { useEffect, useState } from "react";
+import * as userClient from "../MongoDBClients/Users/client";
+import { useDispatch, useSelector } from "react-redux";
+import { setAccount } from "../Login/reducer";
 
 function NavBar() {
-  const pathname = useLocation();
+  const account = useSelector((state) => state.accountReducer.account);
+  const dispatch = useDispatch();
+  const fetchAccount = async () => {
+    const new_account = await clientUser.account();
+    if (
+      !account ||
+      (account.username && new_account.username !== account.username)
+    ) {
+      console.log("Setting account");
+      dispatch(setAccount(new_account));
+    }
+  };
+
+  const navigate = useNavigate();
+
+  const signout = async () => {
+    await userClient.signout();
+    dispatch(setAccount(null));
+    navigate("/login");
+  };
+
+  useEffect(() => {
+    fetchAccount();
+  }, [account]);
   return (
     <nav className="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
       <Link key={"home"} to={`/home`} className="ms-2 navbar-brand">
@@ -30,6 +57,13 @@ function NavBar() {
               Login
             </Link>
           </li>
+          {account && (
+            <li className="nav-item">
+              <button onClick={signout} className="nav-link">
+                Sign Out
+              </button>
+            </li>
+          )}
         </ul>
       </div>
     </nav>

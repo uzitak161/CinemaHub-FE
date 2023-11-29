@@ -6,26 +6,30 @@ import NavBar from "./NavBar/index.js";
 import ProfileSpecific from "./profile/profileUID/index.js";
 import Login from "./Login/index.js";
 import Details from "./Details";
+import { Provider } from "react-redux";
+import store from "./store";
 
 function App() {
   const screen = "labs";
   return (
-    <HashRouter>
-      <div className="">
-        <NavBar />
-        <div style={{ marginTop: 56 }}>
-          <Routes>
-            <Route path="/" element={<Navigate to="/Home" />} />
-            <Route path="/Home" element={<Home />} />
-            <Route path="/Profile/:id" element={<ProfileSpecific />} />
-            <Route path="/Profile" element={<Profile />} />
-            <Route path="/Search" element={<Search />} />
-            <Route path="/Login" element={<Login />} />
-            <Route path="/Details/:did" element={<Details />} />
-          </Routes>
+    <Provider store={store}>
+      <HashRouter>
+        <div className="">
+          <NavBar />
+          <div style={{ marginTop: 56 }}>
+            <Routes>
+              <Route path="/" element={<Navigate to="/Home" />} />
+              <Route path="/Home" element={<Home />} />
+              <Route path="/Profile/:id" element={<ProfileSpecific />} />
+              <Route path="/Profile" element={<Profile />} />
+              <Route path="/Search" element={<Search />} />
+              <Route path="/Login" element={<Login />} />
+              <Route path="/Details/:did" element={<Details />} />
+            </Routes>
+          </div>
         </div>
-      </div>
-    </HashRouter>
+      </HashRouter>
+    </Provider>
   );
 }
 

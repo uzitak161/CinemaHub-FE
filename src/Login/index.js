@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./index.css"; // You can create your own CSS file for additional styling
+import "./styles.css"; // You can create your own CSS file for additional styling
 import * as userClient from "../MongoDBClients/Users/client";
 
 const Login = () => {
@@ -13,10 +13,9 @@ const Login = () => {
   });
   const signIn = async () => {
     await userClient.signin(credentials);
-    console.log("Signing in" + JSON.stringify(credentials));
     navigate("/home");
   };
-  const signup = async () => {
+  const signUp = async () => {
     try {
       console.log("Signing up");
       await userClient.signup(credentials);
@@ -30,9 +29,9 @@ const Login = () => {
     if (isLogin) {
       signIn();
     } else {
-      signup();
+      signUp();
     }
-  }
+  };
   return (
     <div className="container-fluid mt-5 main-login">
       <div className="row justify-content-center">
@@ -51,10 +50,12 @@ const Login = () => {
                     className="form-control"
                     placeholder="Enter your username"
                     value={credentials.username}
-                    onChange={(e) => setCredentials({
+                    onChange={(e) =>
+                      setCredentials({
                         ...credentials,
                         username: e.target.value,
-                    })}
+                      })
+                    }
                     required
                   />
                 </div>
@@ -66,10 +67,12 @@ const Login = () => {
                     className="form-control"
                     placeholder="Enter your password"
                     value={credentials.password}
-                    onChange={(e) => setCredentials({
+                    onChange={(e) =>
+                      setCredentials({
                         ...credentials,
                         password: e.target.value,
-                    })}
+                      })
+                    }
                     required
                   />
                 </div>

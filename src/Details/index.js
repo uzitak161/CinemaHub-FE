@@ -5,12 +5,24 @@ import { useEffect, useState } from "react";
 import "./styles.css";
 import ReviewPane from "./ReviewPane";
 import { FaCheckCircle } from "react-icons/fa";
+import * as clientUser from "../MongoDBClients/Users/client";
+import { useDispatch, useSelector } from "react-redux";
+import { setAccount } from "../Login/reducer";
 
 function Details() {
   const { did } = useParams();
-
-  // TODO change this for sign in and what not
-  const [username, setUsername] = useState("user1");
+  const account = useSelector((state) => state.accountReducer.account);
+  const dispatch = useDispatch();
+  const fetchAccount = async () => {
+    const new_account = await clientUser.account();
+    if (
+      !account ||
+      (account.username && new_account.username !== account.username)
+    ) {
+      console.log("Setting account");
+      dispatch(setAccount(new_account));
+    }
+  };
 
   const [omdbDetails, setOmdbDetails] = useState({});
   const fetchOmdbDetails = async () => {
@@ -23,27 +35,30 @@ function Details() {
 
   const [review, setReview] = useState({
     movieId: did,
-    username: username,
+    username: "TEST",
     text: "",
-    starRating: 0,
+    starRating: 1,
     createdAt: new Date(),
   });
 
   useEffect(() => {
+    fetchAccount();
     fetchOmdbDetails();
     fetchMovieReviews();
   }, [review]);
 
   const saveReview = async () => {
-    if (username) {
+    if (account && account.username) {
+      setReview({ ...review, username: account.username });
       console.log("Saving review" + JSON.stringify(review));
       const response = await reviewClient.createReview(review);
       console.log(response);
+      console.log("My account is " + JSON.stringify(account));
       setReview({
         movieId: did,
-        username: username,
+        username: account.username,
         text: "",
-        starRating: 0,
+        starRating: 1,
         createdAt: new Date(),
       });
       fetchOmdbDetails();
