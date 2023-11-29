@@ -4,7 +4,7 @@ import Profile from "./profile";
 import Search from "./search";
 import NavBar from "./NavBar/index.js";
 import ProfileSpecific from "./profile/profileUID/index.js";
-import Login from "./login/index.js";
+import Login from "./Login/index.js";
 import Details from "./Details";
 
 function App() {
