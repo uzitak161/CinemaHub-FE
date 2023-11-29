@@ -1,0 +1,50 @@
+/* Movie styles */
+/* .item-container img {
+    width: 100%;
+    height: auto;
+    transition: filter 0.3s;
+} */
+
+.movie-container {
+    margin: 10px;
+    position: relative;
+
+}
+
+.movie-container img {
+    width: 100%;
+    height: 100%;
+    transition: filter 0.3s;
+}
+
+.movie-container:hover img {
+    filter: brightness(50%);
+}
+
+.movie-container:hover .movie-info {
+    opacity: 1;
+}
+
+.movie-info {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.movie-title {
+    font-size: 20px;
+}
+
+.movie-year {
+    font-size: 16px;
+}

@@ -1,208 +1,75 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { FaUserAlt } from "react-icons/fa";
-import "./search.css";
+import React, { useState } from 'react';
+import "./search.css"
+import GridWithPagination from './GridWithPagination';
+import { searchMoviesByTitle } from '../OMDbAPI/client';
+import { getUsersByNames } from '../MongoDBClients/Users/client';
+import FilterComponent from './FilterComponent';
+// import { Toast } from 'bootstrap';
 
-// Generate a user card within the search results (center column)
-function generateUserCard(user) {
-  return (
-    <div className="card">
-      <div className="card-body d-flex flex-row">
-        <h5 className="card-title profile-pic">
-          <Link className="profile-pic" to="/profile/1">
-            {" "}
-            <FaUserAlt className="avatar" /> {user.name}
-          </Link>
-        </h5>
-        <div className="align-middle">
-          <h6 className="card-subtitle mb-2 text-muted">
-            Followers: {user.followers}
-          </h6>
-          <h6 className="card-subtitle mb-2 text-muted">
-            Following: {user.following}
-          </h6>
-          <h6 className="card-subtitle mb-2 text-muted">Posts: {user.posts}</h6>
-        </div>
-      </div>
-    </div>
-  );
-}
+const SearchComponent = () => {
+    const [searchTerm, setSearchTerm] = useState('');
+    const [searchType, setSearchType] = useState('movies'); // 'movies' or 'users'
+    const [results, setResults] = useState([]); // Array of movie or user objects
+    const [totalItems, setTotalItems] = useState(0);
+    const [filters, setFilters] = useState({}); // for storing filters
 
-// Generate a movie card within the search results (center column)
-function generateMovieCard(movie) {
-  return (
-    <div className="card">
-      <div className="card-body">
-        <h5 className="card-title">{movie.title}</h5>
-        <h6 className="card-subtitle mb-2 text-muted">{movie.genre}</h6>
-      </div>
-    </div>
-  );
-}
+    const handleMovieFilterChange = (filterName, value) => {
+        setFilters({ ...filters, [filterName]: value });
+    };
 
-// Generate all the search results based on user interactions (center column)
-function generateSearchResults(searchResults) {
-  return (
-    <div>
-      <h1>Discover</h1>
-      <div>
-        {searchResults.map((result) =>
-          result.username
-            ? generateUserCard(result)
-            : generateMovieCard(result),
-        )}
-      </div>
-    </div>
-  );
-}
+    const handleSearchInputChange = (event) => {
+        setSearchTerm(event.target.value);
+    };
 
-function Search() {
-  const usersData = [
-    {
-      id: 1,
-      username: "user1",
-      name: "User One",
-      followers: 1500,
-      following: 300,
-      posts: 25,
-    },
-    {
-      id: 2,
-      username: "user2",
-      name: "User Two",
-      followers: 1200,
-      following: 250,
-      posts: 30,
-    },
-    {
-      id: 3,
-      username: "user3",
-      name: "User Three",
-      followers: 800,
-      following: 180,
-      posts: 20,
-    },
-    // Add more users as needed
-  ];
+    const handleSearchTypeChange = (type) => {
+        setSearchType(type);
+    };
 
-  const moviesData = [
-    { id: 1, title: "Movie One", genre: "Action", averageRating: 4.2 },
-    { id: 2, title: "Movie Two", genre: "Drama", averageRating: 3.8 },
-    { id: 3, title: "Movie Three", genre: "Comedy", averageRating: 4.5 },
-    // Add more movies as needed
-  ];
+    const handleSearch = (pageNumber) => {
+        setSearchTerm(searchTerm.trim());
+        if (searchTerm.length === 0) {
+            return;
+        }
+        const filtersWithPageNumber = { ...filters, pageNumber };
+        if (searchType === 'movies') {
+            // Call function to search movies
+            searchMoviesByTitle(searchTerm, filtersWithPageNumber).then((response) => {
+                if (response.Response === 'False') {
+                    alert(response.Error);
+                    return;
+                }
+                setResults(response.Search);
+                setTotalItems(response.totalResults);
+            });
+        } else {
+            // Call function to search users
+            getUsersByNames(searchTerm, filtersWithPageNumber).then((response) => {
+                setResults(response);
+                setTotalItems(response.totalResults);
+            });
+        }
+    };
 
-  // A mixture of users and reviews kinda like an explore/for-you page
-  const foryouSearchResults = [
-    { id: 1, title: "Movie One", genre: "Action", averageRating: 4.2 },
-    { id: 2, title: "Movie Two", genre: "Drama", averageRating: 3.8 },
-    { id: 3, title: "Movie Three", genre: "Comedy", averageRating: 4.5 },
-    {
-      id: 1,
-      username: "user1",
-      name: "User One",
-      followers: 1500,
-      following: 300,
-      posts: 25,
-    },
-    {
-      id: 2,
-      username: "user2",
-      name: "User Two",
-      followers: 1200,
-      following: 250,
-      posts: 30,
-    },
-    {
-      id: 3,
-      username: "user3",
-      name: "User Three",
-      followers: 800,
-      following: 180,
-      posts: 20,
-    },
-  ];
-
-  const [searchResults, setSearchResults] = useState(foryouSearchResults);
-
-  const [userSearchTerm, setUserSearchTerm] = useState("");
-
-  const handleUserSearch = (e) => {
-    // TODO: Implement user search via API call
-    setSearchResults(usersData);
-  };
-
-  const [movieSearchTerm, setMovieSearchTerm] = useState("");
-
-  const handleMovieSearch = (e) => {
-    // TODO: Implement movie search via API call
-    setSearchResults(moviesData);
-  };
-
-  return (
-    <div className="container-fluid">
-      <div className="row">
-        <div className="col-2">{/* Empty div for spacing */}</div>
-        <div className="col-2 position-fixed">
-          <h1 className="text-center mb-4">Discover Users</h1>
-          <form>
-            <div className="input-group mb-3">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Search users..."
-                aria-label="Search users"
-                aria-describedby="button-user-search"
-                onChange={(e) => setUserSearchTerm(e.target.value)}
-                value={userSearchTerm}
-              />
-              <div className="input-group-append">
-                <button
-                  className="btn btn-primary"
-                  type="button"
-                  id="button-user-search"
-                  onClick={handleUserSearch}
-                >
-                  Search
-                </button>
-              </div>
+    return (
+        <div className='mt-2'>
+            <div className="my-2 mx-3">
+                <input
+                    type="text"
+                    placeholder="Search..."
+                    value={searchTerm}
+                    onChange={handleSearchInputChange}
+                />
+                <button onClick={() => handleSearchTypeChange('movies')} className={`btn ${searchType === 'movies' ? 'btn-secondary' : 'btn-primary'}`}>Movies</button>
+                <button onClick={() => handleSearchTypeChange('users')} className={`btn ${searchType === 'users' ? 'btn-secondary' : 'btn-primary'}`}>Users</button>
+                <button onClick={handleSearch} className="btn btn-success">Search</button>
             </div>
-          </form>
-
-          <h1 className="text-center mb-4">Discover Movies</h1>
-          <form>
-            <div className="input-group mb-3">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Search movies..."
-                aria-label="Search movies"
-                aria-describedby="button-movie-search"
-                onChange={(e) => setMovieSearchTerm(e.target.value)}
-                value={movieSearchTerm}
-              />
-              <div className="input-group-append">
-                <button
-                  className="btn btn-primary"
-                  type="button"
-                  id="button-movie-search"
-                  onClick={handleMovieSearch}
-                >
-                  Search
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div className="col-8 main-body">
-          {generateSearchResults(searchResults)}
-        </div>
-        <div className="col-2">
-          <h2>Placeholder</h2>
-        </div>
+            {/* Add filter components here */}
+            <FilterComponent searchType={searchType}
+                onFilterChange={handleMovieFilterChange} filters={filters} />
+            <GridWithPagination items={results} type={searchType} handleSearch={handleSearch}
+                totalItems={totalItems} />
       </div>
-    </div>
   );
 }
 
-export default Search;
+export default SearchComponent;
