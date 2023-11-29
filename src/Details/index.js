@@ -11,7 +11,16 @@ import { setAccount } from "../Login/reducer";
 
 function Details() {
   const { did } = useParams();
+
   const account = useSelector((state) => state.accountReducer.account);
+  const default_username = account ? account.username : "";
+  const [review, setReview] = useState({
+    movieId: did,
+    username: default_username,
+    text: "",
+    starRating: 1,
+    createdAt: new Date(),
+  });
   const dispatch = useDispatch();
   const fetchAccount = async () => {
     const new_account = await clientUser.account();
@@ -21,6 +30,7 @@ function Details() {
     ) {
       console.log("Setting account");
       dispatch(setAccount(new_account));
+      setReview({ ...review, username: new_account.username });
     }
   };
 
@@ -33,14 +43,6 @@ function Details() {
     setMovieReviews(await reviewClient.findReviewByMovieId(did));
   };
 
-  const [review, setReview] = useState({
-    movieId: did,
-    username: "TEST",
-    text: "",
-    starRating: 1,
-    createdAt: new Date(),
-  });
-
   useEffect(() => {
     fetchAccount();
     fetchOmdbDetails();
@@ -49,7 +51,7 @@ function Details() {
 
   const saveReview = async () => {
     if (account && account.username) {
-      setReview({ ...review, username: account.username });
+      setReview({ ...review, username: account.username, createdAt: new Date() });
       console.log("Saving review" + JSON.stringify(review));
       const response = await reviewClient.createReview(review);
       console.log(response);
