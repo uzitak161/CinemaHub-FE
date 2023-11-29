@@ -1,83 +1,82 @@
 html,
 body {
-    width: 100%;
-    justify-content: left !important;
+  width: 100%;
+  justify-content: left !important;
 }
 
-
 .center-text {
-    text-align: center;
+  text-align: center;
 }
 
 .modal-quit {
-    width: 50px !important;
-    height: 50px !important;
-    text-align: center;
-    margin: 20px;
+  width: 50px !important;
+  height: 50px !important;
+  text-align: center;
+  margin: 20px;
 }
 
 .stats-modal {
-    top: "50%";
-    left: "50%";
-    right: "auto";
-    bottom: "auto";
-    marginRight: "-50%";
-    transform: "translate(-50%, -50%)";
-    backgroundColor: "white";
-    width: 400;
+  top: "50%";
+  left: "50%";
+  right: "auto";
+  bottom: "auto";
+  marginright: "-50%";
+  transform: "translate(-50%, -50%)";
+  backgroundcolor: "white";
+  width: 400;
 }
 
 .bio-area {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem;
-    margin: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 0 5px #ccc;
-    background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  margin: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 5px #ccc;
+  background-color: #ffffff;
 }
 
 .bio-area .avatar {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    margin-bottom: 1rem;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
 }
 
 .number {
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .bio-area .stats {
-    background-color: #a1aab9 !important;
-    font-size: 12px;
+  background-color: #a1aab9 !important;
+  font-size: 12px;
 }
 
 .stars {
-    color: #f1c40f;
+  color: #f1c40f;
 }
 
 .edit-profile {
-    opacity: 0;
+  opacity: 0;
 }
 
 .avatar:hover {
-    color : darkgrey;
+  color: darkgrey;
 }
 
 .stats:hover * {
-    background-color: darkgoldenrod !important;
+  background-color: darkgoldenrod !important;
 }
 
 .stats:hover {
-    background-color: darkgoldenrod !important;
+  background-color: darkgoldenrod !important;
 }
 
 .avatar.nohover {
-    color : black;
+  color: black;
 }

@@ -68,8 +68,8 @@ const SearchComponent = () => {
                 onFilterChange={handleMovieFilterChange} filters={filters} />
             <GridWithPagination items={results} type={searchType} handleSearch={handleSearch}
                 totalItems={totalItems} />
-        </div>
-    );
+      </div>
+  );
 }
 
 export default SearchComponent;
