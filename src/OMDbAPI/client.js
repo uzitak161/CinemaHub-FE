@@ -13,7 +13,7 @@ export const searchMoviesByTitle = async (term, filters) => {
     if (filters.year && filters.year.length > 0 ) {
         url += `&y=${filters.year}`;
     }
-    if (filters.type && filters.type !== "all") {
+    if (filters.type && filters.type !== "media") {
         url += `&type=${filters.type}`;
     }
     if (filters.pageNumber && filters.pageNumber > 0) {

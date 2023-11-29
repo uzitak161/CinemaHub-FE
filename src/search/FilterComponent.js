@@ -2,7 +2,7 @@ import React from 'react';
 
 const movieFilterOptions = [
   { name: 'year', label: 'Year', type: 'number' },
-  { name: 'type', label: 'Type', type: 'select', values: ['all', 'movie', 'series', 'episode'] },
+  // { name: 'type', label: 'Type', type: 'select', values: ['all', 'movie', 'series', 'episode'] },
   // Add more filters as needed
 ];
 
@@ -18,7 +18,7 @@ const FilterComponent = ({ searchType, onFilterChange, filters }) => {
 
   return (
     <div>
-      {(searchType === "movies" ? movieFilterOptions : userFilterOptions).map(option => (
+      {(searchType === "users" ? userFilterOptions : movieFilterOptions).map(option => (
         <div key={option.name}>
           <label htmlFor={option.name}>{option.label}</label>
           {option.type === 'select' ? (
