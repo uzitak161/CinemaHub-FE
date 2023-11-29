@@ -4,14 +4,9 @@ import Pagination from './Pagination'; // Assuming you have a Pagination compone
 
 const GridWithPagination = ({ handleSearch, items, type, totalItems }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; // Can be adjusted
-
-  // const indexOfLastItem = currentPage * itemsPerPage;
-  // const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  // const currentItems = items.slice(indexOfFirstItem, indexOfLastItem);
+  const itemsPerPage = 10; // Number of items to display per page
 
   useEffect(() => {
-    console.log("currentPage", currentPage);
     handleSearch(currentPage);
   }, [currentPage]); // Fetch data when currentPage changes
 

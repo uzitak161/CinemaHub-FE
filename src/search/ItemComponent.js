@@ -52,7 +52,7 @@ function generateUserCard(user) {
 const ItemComponent = ({ item, type }) => {
   return (
     <>
-      {type === 'movies' && generateMovieCard(item)}
+      {type !== 'users' && generateMovieCard(item)}
       {type === 'users' && generateUserCard(item)}
     </>
   );
