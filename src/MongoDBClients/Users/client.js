@@ -62,6 +62,11 @@ export const findUserById = async (userId) => {
   return response.data;
 };
 
+export const findUserByUsername = async (username) => {
+  const response = await request.get(`${USERS_API}/username/${username}`);
+  return response.data;
+}
+
 export const deleteUser = async (userId) => {
   const response = await request.delete(`${USERS_API}/${userId}`);
   return response.data;
@@ -71,3 +76,8 @@ export const signout = async () => {
   const response = await request.post(`${USERS_API}/signout`);
   return response.data;
 };
+
+export const followUser = async (userId) => {
+  const response = await request.put(`${USERS_API}/username/${userId}/follow`);
+  return response.data;
+}

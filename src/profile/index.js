@@ -6,6 +6,9 @@ import Modal from "react-modal";
 import StatModal from "./statModal";
 import EditModal from "./editModal";
 import * as reviewClient from "../MongoDBClients/Reviews/client.js";
+import { useSelector, useDispatch } from "react-redux";
+import { setAccount } from "../Login/reducer";
+import * as clientUser from "../MongoDBClients/Users/client";
 
 function generateAllUserReviews(reviews) {
   return (
@@ -83,12 +86,30 @@ function generateReviewCard(review) {
 }
 
 function Profile() {
-  const username = "John Doe";
-  const following = ["user5", "user4", "user2"];
 
-  // This is temporary, will eventually use redux to store Login status
-  const [loggedIn, setStatus] = useState(true);
+  const account = useSelector((state) => state.accountReducer.account);
+  const dispatch = useDispatch();
   const [reviews, setReviews] = useState([]);
+
+
+  const fetchAccount = async () => {
+    const new_account = await clientUser.account();
+    if (
+      !account ||
+      (account.username && new_account.username !== account.username)
+    ) {
+      console.log("Setting account");
+      dispatch(setAccount(new_account));
+    }
+  };
+
+  const fetchReviews = async () => {
+    const new_reviews = await reviewClient.findReviewByUsername(account.id);
+    setReviews(new_reviews);
+  }
+
+
+  const following = ["user5", "user4", "user2"];
   const [recommendations, setRecommendations] = useState([
     {
       movieTitle: "Pulp Fiction",
@@ -124,13 +145,10 @@ function Profile() {
   const followers = 10;
   const reviewCount = 20;
 
-  const getReviews = async () => {
-    setReviews(await reviewClient.findAllReviews());
-  };
-
   useEffect(() => {
-    getReviews();
     getRecommendations();
+    fetchAccount();
+    fetchReviews();
   }, []);
 
   const modalStyle = {
@@ -158,7 +176,7 @@ function Profile() {
     }
   };
 
-  if (loggedIn) {
+  if (account) {
     return (
       <div className="d-flex bd-highlight">
         <div className="p-2  bd-highlight">
@@ -206,7 +224,7 @@ function Profile() {
                 >
                   <EditModal setModal={setEditModalOpen} />
                 </Modal>
-                <h3 className="mt-2">User's Name</h3>
+                <h3 className="mt-2">{account.username}</h3>
                 <textarea
                   readOnly
                   rows="4"
