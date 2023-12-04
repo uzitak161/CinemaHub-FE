@@ -104,7 +104,7 @@ function Profile() {
   };
 
   const fetchReviews = async () => {
-    const new_reviews = await reviewClient.findReviewByUsername(account.id);
+    const new_reviews = await reviewClient.findReviewByUsername(account.username);
     setReviews(new_reviews);
   }
 
