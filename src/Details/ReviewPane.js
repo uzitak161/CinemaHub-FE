@@ -1,11 +1,10 @@
 import { Link } from "react-router-dom";
-import { FaStar } from "react-icons/fa";
 
 function ReviewPane({ pane_title, reviews, movie_title }) {
   return (
     <div className={"d-flex flex-column pt-5"}>
       <h3>{pane_title}</h3>
-      <div className={"d-flex flew-row overflow-auto position-relative"}>
+      <div className={"d-flex flex-row overflow-auto position-relative"}>
         {reviews.map((review, index) => (
           <Link
             key={index}

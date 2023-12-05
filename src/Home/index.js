@@ -4,16 +4,12 @@ import ImageThumbnailPane from "./ImageThumbnailPane";
 import { Link } from "react-router-dom";
 import ReviewThumbnailPane from "./ReviewThumbnailPane";
 import * as reviewClient from "../MongoDBClients/reviewsClient.js";
-import * as omdbClient from "../OMDbAPI/client.js";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import * as client from "../MongoDBClients/usersClient";
-import { setCurrentUser } from "../Login/reducer";
+import { useSelector } from "react-redux";
 
 function Home() {
   const { currentUser } = useSelector((state) => state.user);
 
-  const dispatch = useDispatch();
   const [recentReviews, setRecentReviews] = useState([]);
   const [recentFollowingReviews, setRecentFollowingReviews] = useState([]);
   const [followingHighRatings, setFollowingHighRatings] = useState([]);

@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import * as userClient from "../MongoDBClients/usersClient";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentUser } from "../Login/reducer";
@@ -49,6 +49,13 @@ function NavBar() {
               <button onClick={signout} className="nav-link">
                 Sign Out
               </button>
+            </li>
+          )}
+          {currentUser && currentUser.role === "ADMIN" && (
+            <li className="nav-item">
+              <Link key={"admin"} to={`/admin`} className="nav-link">
+                Admin
+              </Link>
             </li>
           )}
         </ul>
