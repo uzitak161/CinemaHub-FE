@@ -6,11 +6,14 @@ import ReviewThumbnailPane from "./ReviewThumbnailPane";
 import * as reviewClient from "../MongoDBClients/reviewsClient.js";
 import * as omdbClient from "../OMDbAPI/client.js";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import * as client from "../MongoDBClients/usersClient";
+import { setCurrentUser } from "../Login/reducer";
 
 function Home() {
   const { currentUser } = useSelector((state) => state.user);
 
+  const dispatch = useDispatch();
   const [recentReviews, setRecentReviews] = useState([]);
   const [recentFollowingReviews, setRecentFollowingReviews] = useState([]);
   const [followingHighRatings, setFollowingHighRatings] = useState([]);
@@ -133,23 +136,22 @@ function Home() {
         <div className={"d-flex flex-column justify-content-center"}>
           {currentUser === null && <Capabilities />}
           {panes_to_title.map((pane, index) => {
-            if (pane.content.length !== 0 && pane.thumbnailType === "movie") {
-              return (
-                <ImageThumbnailPane
-                  pane_title={pane.pane_title}
-                  movies={pane.content}
-                />
-              );
-            } else if (
-              pane.content.length !== 0 &&
-              pane.thumbnailType === "review"
-            ) {
-              return (
-                <ReviewThumbnailPane
-                  pane_title={pane.pane_title}
-                  reviews={pane.content}
-                />
-              );
+            if (pane.content.length !== 0 || currentUser) {
+              if (pane.thumbnailType === "movie") {
+                return (
+                  <ImageThumbnailPane
+                    pane_title={pane.pane_title}
+                    movies={pane.content}
+                  />
+                );
+              } else if (pane.thumbnailType === "review") {
+                return (
+                  <ReviewThumbnailPane
+                    pane_title={pane.pane_title}
+                    reviews={pane.content}
+                  />
+                );
+              }
             }
           })}
         </div>

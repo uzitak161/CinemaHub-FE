@@ -1,22 +1,23 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import * as userClient from "./MongoDBClients/usersClient";
 import { setCurrentUser } from "./Login/reducer";
+import * as client from "./MongoDBClients/usersClient";
 
 function RootComponent({ children }) {
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
   const dispatch = useDispatch();
-  const fetchCurrentUser = async () => {
+  const fetchUser = async () => {
     try {
-      const currentUser = await userClient.account();
-      dispatch(setCurrentUser(currentUser));
+      const user = await client.account();
+      setUser(user);
+      dispatch(setCurrentUser(user));
       setLoading(false);
     } catch (error) {}
   };
   useEffect(() => {
-    fetchCurrentUser();
+    fetchUser();
   }, []);
-
   return <div>{!loading && children}</div>;
 }
 

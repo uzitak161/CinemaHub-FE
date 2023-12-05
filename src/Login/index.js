@@ -6,22 +6,31 @@ import * as userClient from "../MongoDBClients/usersClient";
 const Login = () => {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
-  const [error, setError] = useState("");
+  const [userRole, setUserRole] = useState("USER");
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
   });
   const signIn = async () => {
-    await userClient.signin(credentials);
-    navigate("/home");
+    const response = await userClient.signin(credentials);
+    if (response) {
+      navigate("/home");
+    } else {
+      alert("Username or password incorrect");
+    }
   };
   const signUp = async () => {
     try {
       console.log("Signing up");
-      await userClient.signup(credentials);
+      const user = { ...credentials, role: userRole };
+      await userClient.signup(user);
       navigate("/home");
     } catch (err) {
-      setError(err.response.data);
+      alert("Username already taken");
+      setCredentials({
+        username: "",
+        password: "",
+      });
     }
   };
   const handleSubmit = (e) => {
@@ -31,6 +40,18 @@ const Login = () => {
     } else {
       signUp();
     }
+  };
+
+  const handleUserRoleRadioChange = (e) => {
+    console.log(e.target.id);
+    if (e.target.id === "userRadio") {
+      setUserRole("USER");
+      console.log("User role set to USER");
+    } else {
+      setUserRole("ADMIN");
+      console.log("User role set to ADMIN");
+    }
+    console.log(userRole);
   };
   return (
     <div>
@@ -76,13 +97,48 @@ const Login = () => {
                     required
                   />
                 </div>
+                {!isLogin && (
+                  <div>
+                    <div className="form-check">
+                      <label className="form-check-label" htmlFor={"userRadio"}>
+                        User
+                      </label>
+                      <input
+                        className="form-check-input"
+                        type="radio"
+                        id="userRadio"
+                        name={"roleRadio"}
+                        onClick={handleUserRoleRadioChange}
+                        defaultChecked
+                      ></input>
+                    </div>
+                    <div className="form-check">
+                      <label
+                        className="form-check-label"
+                        htmlFor={"adminRadio"}
+                      >
+                        Admin
+                      </label>
+                      <input
+                        className="form-check-input"
+                        type="radio"
+                        id="adminRadio"
+                        name={"roleRadio"}
+                        onClick={handleUserRoleRadioChange}
+                      ></input>
+                    </div>
+                  </div>
+                )}
                 <button type="submit" className="btn btn-primary btn-block">
                   {isLogin ? "Login" : "Sign Up"}
                 </button>
               </form>
               <p className="text-center mt-3">
                 {isLogin ? "New user? " : "Already have an account? "}
-                <span className="link" onClick={() => setIsLogin(!isLogin)}>
+                <span
+                  className="btn bg-secondary"
+                  onClick={() => setIsLogin(!isLogin)}
+                >
                   {isLogin ? "Sign up" : "Login"}
                 </span>
               </p>
