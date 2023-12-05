@@ -16,15 +16,13 @@ function AdminReviews() {
     setReviews(await reviewClient.findAllReviews());
   };
 
-  const saveReview = async () => {
+  const updateReview = async () => {
     if (review._id) {
       try {
         await reviewClient.updateReview(review._id, review);
       } catch (e) {
         console.error(e);
       }
-    } else {
-      await reviewClient.createReview(review, review.movieId._id);
     }
     setReview({
       username: "",
@@ -73,7 +71,7 @@ function AdminReviews() {
             </select>
           </div>
           <h3>Edit a Review</h3>
-          <button className={"btn"} onClick={() => saveReview()}>
+          <button className={"btn"} onClick={() => updateReview()}>
             <FaCheckCircle color={"green"} size={40} />
           </button>
         </div>

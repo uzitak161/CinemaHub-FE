@@ -22,12 +22,13 @@ export const findUserByUsername = async (username) => {
   const response = await request.get(`${USERS_API}/username/${username}`);
   return response.data;
 };
-export const updateUser = async (user) => {
-  const response = await request.put(`${USERS_API}/${user._id}`, user);
+// note that this is userId not username
+export const updateUser = async (userId, user) => {
+  const response = await request.put(`${USERS_API}/${userId}`, user);
   return response.data;
 };
-export const deleteUser = async (userId) => {
-  const response = await request.delete(`${USERS_API}/${userId}`);
+export const deleteUser = async (username) => {
+  const response = await request.delete(`${USERS_API}/${username}`);
   return response.data;
 };
 export const signup = async (credentials) => {

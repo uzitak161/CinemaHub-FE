@@ -25,7 +25,7 @@ export const findReviewsByMovieId = async (movieId) => {
   return response.data;
 };
 export const findReviewsByUsername = async (username) => {
-  const response = await request.get(`${REVIEWS_API}/user/${username}`);
+  const response = await request.get(`${REVIEWS_API}/username/${username}`);
   return response.data;
 };
 export const updateReview = async (reviewId, review) => {
