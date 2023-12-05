@@ -1,31 +1,40 @@
 import { useParams } from "react-router-dom";
-import * as omdbClient from "../OMDbAPI/client";
 import * as reviewClient from "../MongoDBClients/reviewsClient";
+import * as moviesClient from "../MongoDBClients/moviesClient";
 import { useEffect, useState } from "react";
 import "./styles.css";
 import ReviewPane from "./ReviewPane";
 import { FaCheckCircle } from "react-icons/fa";
-import { useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 
 function Details() {
   const { currentUser } = useSelector((state) => state.user);
   const { did } = useParams();
-    const default_username = currentUser ? currentUser.username : "Anonymous";
   const [review, setReview] = useState({
     movieId: did,
-    username: default_username,
+    username: currentUser ? currentUser.username : "Anonymous",
     text: "",
     starRating: 1,
     createdAt: new Date(),
   });
   const [omdbDetails, setOmdbDetails] = useState({});
   const fetchOmdbDetails = async () => {
-    setOmdbDetails(await omdbClient.findMovieById(did));
+    const cachedMovie = await moviesClient.findMovieByOmdbID(did);
+    if (cachedMovie == null) {
+      setOmdbDetails(await moviesClient.findMovieByOmdbID(did));
+    } else {
+      setOmdbDetails(cachedMovie);
+    }
   };
 
   const [movieReviews, setMovieReviews] = useState([]);
   const fetchMovieReviews = async () => {
-    setMovieReviews(await reviewClient.findReviewByMovieId(did));
+    const cachedMovie = await moviesClient.findMovieByOmdbID(did);
+    if (cachedMovie == null) {
+      setMovieReviews([]);
+    } else {
+      setMovieReviews(await reviewClient.findReviewsByMovieId(cachedMovie._id));
+    }
   };
 
   useEffect(() => {
@@ -35,7 +44,11 @@ function Details() {
 
   const saveReview = async () => {
     if (currentUser && currentUser.username) {
-      setReview({ ...review, username: currentUser.username, createdAt: new Date() });
+      setReview({
+        ...review,
+        username: currentUser.username,
+        createdAt: new Date(),
+      });
       await reviewClient.createReview(review);
       setReview({
         movieId: did,
@@ -62,14 +75,14 @@ function Details() {
             <div className={"pe-3"}>
               <img
                 className={"wd-details-poster"}
-                src={omdbDetails.Poster}
-                alt={omdbDetails.Title}
+                src={omdbDetails.poster}
+                alt={omdbDetails.title}
               />
             </div>
             <div className={"flex-grow-1 d-flex flex-column"}>
               <div className={"text-center p-2"}>
-                <h1 className={"wd-movie-title"}>{omdbDetails.Title}</h1>
-                <h4>{omdbDetails.Plot}</h4>
+                <h1 className={"wd-movie-title"}>{omdbDetails.title}</h1>
+                <h4>{omdbDetails.plot}</h4>
               </div>
               <div className={"bg-secondary text-white rounded p-2 me-2"}>
                 <div className={"d-flex flex-row justify-content-between"}>
@@ -116,7 +129,7 @@ function Details() {
             <ReviewPane
               pane_title={"CinemaHub Reviews"}
               reviews={movieReviews}
-              movie_title={omdbDetails.Title}
+              movie_title={omdbDetails.title}
             />
           )}
         </div>

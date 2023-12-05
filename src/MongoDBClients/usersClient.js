@@ -2,9 +2,9 @@ import axios from "axios";
 const request = axios.create({
   withCredentials: true,
 });
-export const BASE_API = process.env.REACT_APP_API_BASE || "http://localhost:4000/api";
+export const BASE_API =
+  process.env.REACT_APP_API_BASE || "http://localhost:4000/api";
 export const USERS_API = `${BASE_API}/users`;
-
 
 export const createUser = async (user) => {
   const response = await request.post(`${USERS_API}`, user);
@@ -47,7 +47,6 @@ export const account = async () => {
   return response.data;
 };
 
-
 export const followUser = async (userId) => {
   const response = await request.put(`${USERS_API}/username/${userId}/follow`);
   return response.data;
@@ -59,7 +58,9 @@ export const getUsersByNames = async (name, filters) => {
   }
   if (filters.minFollowing && filters.minFollowing > 0) {
     // TOOD does this work i don't think we have any support for the below?
-    url += `${url.includes("?") ? "&" : "?"}minFollowing=${filters.minFollowing}`;
+    url += `${url.includes("?") ? "&" : "?"}minFollowing=${
+      filters.minFollowing
+    }`;
   }
   const { data } = await request.get(url);
   return data;

@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import * as userClient from "../MongoDBClients/usersClient";
 import { useDispatch, useSelector } from "react-redux";
-import {setCurrentUser} from "../Login/reducer";
+import { setCurrentUser } from "../Login/reducer";
 
 function NavBar() {
   const { currentUser } = useSelector((state) => state.user);
@@ -16,8 +16,7 @@ function NavBar() {
     navigate("/login");
   };
 
-  useEffect(() => {
-  }, [currentUser]);
+  useEffect(() => {}, [currentUser]);
   return (
     <nav className="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
       <Link key={"home"} to={`/home`} className="ms-2 navbar-brand">

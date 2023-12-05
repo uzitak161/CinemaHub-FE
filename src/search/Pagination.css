@@ -1,20 +1,20 @@
 .pagination {
-    display: flex;
-    justify-content: center;
-    list-style: none;
-    padding: 0;
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 0;
 }
 
 .page-item {
-    margin: 0 5px;
+  margin: 0 5px;
 }
 
 .page-link {
-    text-decoration: none;
-    color: blue;
-    cursor: pointer;
+  text-decoration: none;
+  color: blue;
+  cursor: pointer;
 }
 
 .page-link:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }

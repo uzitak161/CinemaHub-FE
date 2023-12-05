@@ -1,13 +1,18 @@
-import React from 'react';
+import React from "react";
 
 const movieFilterOptions = [
-  { name: 'year', label: 'Year', type: 'number' },
+  { name: "year", label: "Year", type: "number" },
   // { name: 'type', label: 'Type', type: 'select', values: ['all', 'movie', 'series', 'episode'] },
   // Add more filters as needed
 ];
 
 const userFilterOptions = [
-  { name: 'role', label: 'Role', type: 'select', values: ['all', 'ADMIN', 'USER'] },
+  {
+    name: "role",
+    label: "Role",
+    type: "select",
+    values: ["all", "ADMIN", "USER"],
+  },
   // Add more filters as needed
 ];
 
@@ -18,37 +23,41 @@ const FilterComponent = ({ searchType, onFilterChange, filters }) => {
 
   return (
     <div>
-      {(searchType === "users" ? userFilterOptions : movieFilterOptions).map(option => (
-        <div key={option.name}>
-          <label htmlFor={option.name}>{option.label}</label>
-          {option.type === 'select' ? (
-            <select
-              name={option.name}
-              id={option.name}
-              onChange={(e) => handleChange(option.name, e.target.value)}
-            >
-              {option.values.map(value => (
-                <option key={value} value={value}>{value}</option>
-              ))}
-            </select>
-          ) : (
-            <input
-              type={option.type}
-              name={option.name}
-              id={option.name}
-              onChange={(e) => handleChange(option.name, e.target.value)}
-            />
-          )}
-        </div>
-      ))}
-      {searchType === "users" && filters.role !== 'ADMIN' && (
+      {(searchType === "users" ? userFilterOptions : movieFilterOptions).map(
+        (option) => (
+          <div key={option.name}>
+            <label htmlFor={option.name}>{option.label}</label>
+            {option.type === "select" ? (
+              <select
+                name={option.name}
+                id={option.name}
+                onChange={(e) => handleChange(option.name, e.target.value)}
+              >
+                {option.values.map((value) => (
+                  <option key={value} value={value}>
+                    {value}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <input
+                type={option.type}
+                name={option.name}
+                id={option.name}
+                onChange={(e) => handleChange(option.name, e.target.value)}
+              />
+            )}
+          </div>
+        ),
+      )}
+      {searchType === "users" && filters.role !== "ADMIN" && (
         <div>
           <label htmlFor="minFollowing">Number of Following</label>
           <input
             type="number"
             name="minFollowing"
             id="minFollowing"
-            onChange={(e) => handleChange('minFollowing', e.target.value)}
+            onChange={(e) => handleChange("minFollowing", e.target.value)}
           />
         </div>
       )}

@@ -6,7 +6,7 @@ import Modal from "react-modal";
 import StatModal from "./statModal";
 import EditModal from "./editModal";
 import * as reviewClient from "../MongoDBClients/reviewsClient.js";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 function generateAllUserReviews(reviews) {
   return (
@@ -84,16 +84,15 @@ function generateReviewCard(review) {
 }
 
 function Profile() {
-
-  const { currentUser } = useSelector((state) => state.user)
+  const { currentUser } = useSelector((state) => state.user);
   const [reviews, setReviews] = useState([]);
 
-
   const fetchReviews = async () => {
-    const new_reviews = await reviewClient.findReviewByUsername(currentUser.username);
+    const new_reviews = await reviewClient.findReviewsByUsername(
+      currentUser.username,
+    );
     setReviews(new_reviews);
-  }
-
+  };
 
   const following = ["user5", "user4", "user2"];
   const [recommendations, setRecommendations] = useState([
