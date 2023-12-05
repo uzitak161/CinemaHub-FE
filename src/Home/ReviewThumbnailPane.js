@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 
-function ReviewThumbnailPane({ pane_title, review_likes_username }) {
+function ReviewThumbnailPane({ pane_title, reviews }) {
   return (
     <div className={"d-flex flex-column pt-5"}>
       <h3>{pane_title}</h3>
       <div className={"d-flex flew-row overflow-auto"}>
-        {review_likes_username.map((review, index) => (
+        {reviews.map((review, index) => (
           <div
             className={
               "rounded bg-dark text-decoration-none text-white m-2 p-2 pe-4 ps-4"
@@ -14,7 +14,7 @@ function ReviewThumbnailPane({ pane_title, review_likes_username }) {
           >
             <Link
               key={index}
-              to={`/details/${review.movieId._id}`}
+              to={`/details/${review.movieId.omdbId}`}
               className={"text-decoration-none text-white"}
             >
               <div className={"text-nowrap wd-font-size-large"}>

@@ -5,10 +5,8 @@ import { Link } from "react-router-dom";
 import Modal from "react-modal";
 import StatModal from "./statModal";
 import EditModal from "./editModal";
-import * as reviewClient from "../MongoDBClients/Reviews/client.js";
+import * as reviewClient from "../MongoDBClients/reviewsClient.js";
 import { useSelector, useDispatch } from "react-redux";
-import { setAccount } from "../Login/reducer";
-import * as clientUser from "../MongoDBClients/Users/client";
 
 function generateAllUserReviews(reviews) {
   return (
@@ -87,24 +85,12 @@ function generateReviewCard(review) {
 
 function Profile() {
 
-  const account = useSelector((state) => state.accountReducer.account);
-  const dispatch = useDispatch();
+  const { currentUser } = useSelector((state) => state.user)
   const [reviews, setReviews] = useState([]);
 
 
-  const fetchAccount = async () => {
-    const new_account = await clientUser.account();
-    if (
-      !account ||
-      (account.username && new_account.username !== account.username)
-    ) {
-      console.log("Setting account");
-      dispatch(setAccount(new_account));
-    }
-  };
-
   const fetchReviews = async () => {
-    const new_reviews = await reviewClient.findReviewByUsername(account.username);
+    const new_reviews = await reviewClient.findReviewByUsername(currentUser.username);
     setReviews(new_reviews);
   }
 
@@ -147,7 +133,6 @@ function Profile() {
 
   useEffect(() => {
     getRecommendations();
-    fetchAccount();
     fetchReviews();
   }, []);
 
@@ -176,7 +161,7 @@ function Profile() {
     }
   };
 
-  if (account) {
+  if (currentUser) {
     return (
       <div className="d-flex bd-highlight">
         <div className="p-2  bd-highlight">
@@ -224,7 +209,7 @@ function Profile() {
                 >
                   <EditModal setModal={setEditModalOpen} />
                 </Modal>
-                <h3 className="mt-2">{account.username}</h3>
+                <h3 className="mt-2">{currentUser.username}</h3>
                 <textarea
                   readOnly
                   rows="4"

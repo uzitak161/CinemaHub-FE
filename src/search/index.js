@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import "./search.css"
 import GridWithPagination from './GridWithPagination';
 import { searchMoviesByTitle } from '../OMDbAPI/client';
-import { getUsersByNames } from '../MongoDBClients/Users/client';
+import { getUsersByNames } from '../MongoDBClients/usersClient';
 import FilterComponent from './FilterComponent';
 import Searchbar from './Searchbar';
 

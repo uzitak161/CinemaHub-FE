@@ -1,19 +1,16 @@
 import { useParams } from "react-router-dom";
 import * as omdbClient from "../OMDbAPI/client";
-import * as reviewClient from "../MongoDBClients/Reviews/client";
+import * as reviewClient from "../MongoDBClients/reviewsClient";
 import { useEffect, useState } from "react";
 import "./styles.css";
 import ReviewPane from "./ReviewPane";
 import { FaCheckCircle } from "react-icons/fa";
-import * as clientUser from "../MongoDBClients/Users/client";
-import { useDispatch, useSelector } from "react-redux";
-import { setAccount } from "../Login/reducer";
+import { useSelector} from "react-redux";
 
 function Details() {
+  const { currentUser } = useSelector((state) => state.user);
   const { did } = useParams();
-
-  const account = useSelector((state) => state.accountReducer.account);
-  const default_username = account ? account.username : "";
+    const default_username = currentUser ? currentUser.username : "Anonymous";
   const [review, setReview] = useState({
     movieId: did,
     username: default_username,
@@ -21,44 +18,28 @@ function Details() {
     starRating: 1,
     createdAt: new Date(),
   });
-  const dispatch = useDispatch();
-  const fetchAccount = async () => {
-    const new_account = await clientUser.account();
-    if (
-      !account ||
-      (account.username && new_account.username !== account.username)
-    ) {
-      console.log("Setting account");
-      dispatch(setAccount(new_account));
-      setReview({ ...review, username: new_account.username });
-    }
-  };
-
   const [omdbDetails, setOmdbDetails] = useState({});
   const fetchOmdbDetails = async () => {
     setOmdbDetails(await omdbClient.findMovieById(did));
   };
+
   const [movieReviews, setMovieReviews] = useState([]);
   const fetchMovieReviews = async () => {
     setMovieReviews(await reviewClient.findReviewByMovieId(did));
   };
 
   useEffect(() => {
-    fetchAccount();
     fetchOmdbDetails();
     fetchMovieReviews();
   }, [review]);
 
   const saveReview = async () => {
-    if (account && account.username) {
-      setReview({ ...review, username: account.username, createdAt: new Date() });
-      console.log("Saving review" + JSON.stringify(review));
-      const response = await reviewClient.createReview(review);
-      console.log(response);
-      console.log("My account is " + JSON.stringify(account));
+    if (currentUser && currentUser.username) {
+      setReview({ ...review, username: currentUser.username, createdAt: new Date() });
+      await reviewClient.createReview(review);
       setReview({
         movieId: did,
-        username: account.username,
+        username: currentUser.username,
         text: "",
         starRating: 1,
         createdAt: new Date(),

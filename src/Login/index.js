@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./styles.css"; // You can create your own CSS file for additional styling
-import * as userClient from "../MongoDBClients/Users/client";
+import * as userClient from "../MongoDBClients/usersClient";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ const Login = () => {
     }
   };
   return (
-    <div className="container-fluid mt-5 main-login">
+    <div>
       <div className="row justify-content-center">
         <div className="col-md-6">
           <div className="card">

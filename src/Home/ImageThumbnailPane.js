@@ -1,17 +1,17 @@
 import { Link } from "react-router-dom";
 import "./styles.css";
 
-function ImageThumbnailPane({ img_title_id, pane_title }) {
+function ImageThumbnailPane({ movies, pane_title }) {
   return (
     <div className={"d-flex flex-column pt-5"}>
       <h3>{pane_title}</h3>
       <div className={"d-flex flex-row overflow-auto"}>
-        {img_title_id.map((image, index) => (
-          <Link key={index} to={`/details/${image._id}`}>
+        {movies.map((movie, index) => (
+          <Link key={index} to={`/details/${movie.omdbId}`}>
             <img
               className={"wd-thumbnail-pane-image p-1"}
-              src={image.img}
-              alt={image.title}
+              src={movie.poster}
+              alt={movie.title}
             />
           </Link>
         ))}

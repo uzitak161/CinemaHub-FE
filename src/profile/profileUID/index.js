@@ -3,10 +3,10 @@ import { FaUserAlt } from "react-icons/fa";
 import "../index.css";
 import Modal from "react-modal";
 import StatModal from "../statModal";
-import * as clientUser from "../../MongoDBClients/Users/client";
-import * as reviewClient from "../../MongoDBClients/Reviews/client.js";
+import * as clientUser from "../../MongoDBClients/usersClient";
+import * as reviewClient from "../../MongoDBClients/reviewsClient.js";
 import { useParams } from "react-router-dom";
-import * as userClient from "../../MongoDBClients/Users/client";
+import * as userClient from "../../MongoDBClients/usersClient";
 
 function generateAllUserReviews(reviews) {
     return (
