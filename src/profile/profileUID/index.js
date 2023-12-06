@@ -37,7 +37,7 @@ function generateReviewCard(review) {
   return (
     <div className="card">
       <div className="card-body">
-        <h5 className="card-title">{review.movieId}</h5>
+        <h5 className="card-title">{review.movieId.title}</h5>
         <h6 className="card-subtitle mb-2 text-muted">
           {Array.from({ length: review.starRating }, (_, index) => (
             <span className="stars" key={index}>
@@ -67,16 +67,12 @@ function ProfileSpecific() {
     setReviews(new_reviews);
   };
 
-  // This is temporary, will eventually use redux to store Login status
+  // Modal open status
   const [modalOpen, setModalOpen] = useState(false);
 
   // Lookup the users profile image if they have one (optional)
   const image = undefined;
-
-  const followers = 10;
-  const reviewCount = 20;
-  const following = 30;
-
+  
   const modalStyle = {
     content: {
       top: "50%",
@@ -102,17 +98,16 @@ function ProfileSpecific() {
     }
   };
 
-  const getReviews = async () => {
-    const URL = "http://localhost:4000/api/comments";
-    const response = reviewClient.findAllReviews();
-    setReviews(response.data);
-  };
+  const handleStatModalClose = () => {
+    setModalOpen(false);
+    fetchAccount();
+  }
+
 
   useEffect(() => {
-    getReviews();
     fetchAccount();
     fetchReviews();
-  }, []);
+  }, [id]);
 
   const handleFollow = () => {
     userClient.followUser(account.username);
@@ -142,25 +137,25 @@ function ProfileSpecific() {
             >
               <div className="d-flex flex-column mx-2 stats">
                 <span className="">Followers</span>
-                <span className="number">{followers}</span>
+                <span className="number">{account.followers.length}</span>
               </div>
 
               <div className="d-flex flex-column mx-2 stats">
                 <span className="">Reviews</span>
-                <span className="number">{reviewCount}</span>
+                <span className="number">{reviews.length}</span>
               </div>
 
               <div className="d-flex flex-column mx-2 stats">
                 <span className="">Following</span>
-                <span className="number">{following}</span>
+                <span className="number">{account.following.length}</span>
               </div>
             </div>
             <Modal
               isOpen={modalOpen}
-              onRequestClose={() => setModalOpen(false)}
+              onRequestClose={() => handleStatModalClose()}
               style={modalStyle}
             >
-              <StatModal setModal={setModalOpen} />
+              <StatModal setModal={setModalOpen} account={account}/>
             </Modal>
             <h3 className="mt-2">{account.username}</h3>
             <textarea
