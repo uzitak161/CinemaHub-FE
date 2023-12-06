@@ -80,3 +80,13 @@ body {
 .avatar.nohover {
   color: black;
 }
+
+.movie-links {
+  text-decoration: none;
+  color: black;
+}
+
+.movie-links:hover {
+  color: darkgoldenrod;
+}
+

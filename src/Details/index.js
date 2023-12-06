@@ -1,64 +1,58 @@
 import { useParams } from "react-router-dom";
-import * as omdbClient from "../OMDbAPI/client";
-import * as reviewClient from "../MongoDBClients/Reviews/client";
+import * as reviewClient from "../MongoDBClients/reviewsClient";
+import * as moviesClient from "../MongoDBClients/moviesClient";
 import { useEffect, useState } from "react";
 import "./styles.css";
 import ReviewPane from "./ReviewPane";
 import { FaCheckCircle } from "react-icons/fa";
-import * as clientUser from "../MongoDBClients/Users/client";
-import { useDispatch, useSelector } from "react-redux";
-import { setAccount } from "../Login/reducer";
+import { useSelector } from "react-redux";
 
 function Details() {
+  const { currentUser } = useSelector((state) => state.user);
   const { did } = useParams();
-
-  const account = useSelector((state) => state.accountReducer.account);
-  const default_username = account ? account.username : "";
   const [review, setReview] = useState({
     movieId: did,
-    username: default_username,
+    username: currentUser ? currentUser.username : "Anonymous",
     text: "",
     starRating: 1,
     createdAt: new Date(),
   });
-  const dispatch = useDispatch();
-  const fetchAccount = async () => {
-    const new_account = await clientUser.account();
-    if (
-      !account ||
-      (account.username && new_account.username !== account.username)
-    ) {
-      console.log("Setting account");
-      dispatch(setAccount(new_account));
-      setReview({ ...review, username: new_account.username });
+  const [omdbDetails, setOmdbDetails] = useState({});
+  const fetchOmdbDetails = async () => {
+    const cachedMovie = await moviesClient.findMovieByOmdbID(did);
+    if (cachedMovie == null) {
+      setOmdbDetails(await moviesClient.findMovieByOmdbID(did));
+    } else {
+      setOmdbDetails(cachedMovie);
     }
   };
 
-  const [omdbDetails, setOmdbDetails] = useState({});
-  const fetchOmdbDetails = async () => {
-    setOmdbDetails(await omdbClient.findMovieById(did));
-  };
   const [movieReviews, setMovieReviews] = useState([]);
   const fetchMovieReviews = async () => {
-    setMovieReviews(await reviewClient.findReviewByMovieId(did));
+    const cachedMovie = await moviesClient.findMovieByOmdbID(did);
+    if (cachedMovie == null) {
+      setMovieReviews([]);
+    } else {
+      setMovieReviews(await reviewClient.findReviewsByMovieId(cachedMovie._id));
+    }
   };
 
   useEffect(() => {
-    fetchAccount();
     fetchOmdbDetails();
     fetchMovieReviews();
   }, [review]);
 
   const saveReview = async () => {
-    if (account && account.username) {
-      setReview({ ...review, username: account.username, createdAt: new Date() });
-      console.log("Saving review" + JSON.stringify(review));
-      const response = await reviewClient.createReview(review);
-      console.log(response);
-      console.log("My account is " + JSON.stringify(account));
+    if (currentUser && currentUser.username) {
+      setReview({
+        ...review,
+        username: currentUser.username,
+        createdAt: new Date(),
+      });
+      await reviewClient.createReview(review);
       setReview({
         movieId: did,
-        username: account.username,
+        username: currentUser.username,
         text: "",
         starRating: 1,
         createdAt: new Date(),
@@ -81,14 +75,14 @@ function Details() {
             <div className={"pe-3"}>
               <img
                 className={"wd-details-poster"}
-                src={omdbDetails.Poster}
-                alt={omdbDetails.Title}
+                src={omdbDetails.poster}
+                alt={omdbDetails.title}
               />
             </div>
             <div className={"flex-grow-1 d-flex flex-column"}>
               <div className={"text-center p-2"}>
-                <h1 className={"wd-movie-title"}>{omdbDetails.Title}</h1>
-                <h4>{omdbDetails.Plot}</h4>
+                <h1 className={"wd-movie-title"}>{omdbDetails.title}</h1>
+                <h4>{omdbDetails.plot}</h4>
               </div>
               <div className={"bg-secondary text-white rounded p-2 me-2"}>
                 <div className={"d-flex flex-row justify-content-between"}>
@@ -135,7 +129,7 @@ function Details() {
             <ReviewPane
               pane_title={"CinemaHub Reviews"}
               reviews={movieReviews}
-              movie_title={omdbDetails.Title}
+              movie_title={omdbDetails.title}
             />
           )}
         </div>

@@ -1,31 +1,35 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { FaUserAlt } from 'react-icons/fa';
-import './ItemComponent.css';
+import React from "react";
+import { Link } from "react-router-dom";
+import { FaUserAlt } from "react-icons/fa";
+import "./ItemComponent.css";
 
 // Generate a movie card within the search results (center column)
 function generateMovieCard(movie) {
   return (
-    <div className="item-container col-3">
+    <div className="item-container col-md-2 col-sm-3 col-5">
       <Link to={`/details/${movie.imdbID}`}>
         {movie.Poster && <img src={movie.Poster} alt={movie.Title} />}
         <div className="movie-info">
-            <div className="movie-title">{movie.Title}</div>
-            <div className="movie-year">{movie.Year}</div>
-          </div>
+          <div className="movie-title">{movie.Title}</div>
+          <div className="movie-year">{movie.Year}</div>
+        </div>
       </Link>
     </div>
-  )
+  );
 }
 
 // Generate a user card within the search results (center column)
 function generateUserCard(user) {
   return (
-    <div className="card item-container col-2 ">
+    <div className="card item-container col-2">
       <div className="card-body d-flex flex-row">
         <h5 className="card-title profile-pic">
-          <Link className="profile-pic" to="/profile/1" >
-            {user.profilePic ? <img src={user.profilePic} alt={user.username} /> : <FaUserAlt className='avatar' />}
+          <Link className="profile-pic" to="/profile/1">
+            {user.profilePic ? (
+              <img src={user.profilePic} alt={user.username} />
+            ) : (
+              <FaUserAlt className="avatar" />
+            )}
             {user.username}
           </Link>
         </h5>
@@ -43,14 +47,14 @@ function generateUserCard(user) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 const ItemComponent = ({ item, type }) => {
   return (
     <>
-      {type !== 'users' && generateMovieCard(item)}
-      {type === 'users' && generateUserCard(item)}
+      {type !== "users" && generateMovieCard(item)}
+      {type === "users" && generateUserCard(item)}
     </>
   );
 };

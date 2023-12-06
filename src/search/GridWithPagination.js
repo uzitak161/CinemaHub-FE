@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import ItemComponent from './ItemComponent';
-import Pagination from './Pagination'; // Assuming you have a Pagination component
+import React, { useState, useEffect } from "react";
+import ItemComponent from "./ItemComponent";
+import Pagination from "./Pagination"; // Assuming you have a Pagination component
 
 const GridWithPagination = ({ handleSearch, items, type, totalItems }) => {
   const [currentPage, setCurrentPage] = useState(1);

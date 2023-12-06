@@ -1,4 +1,5 @@
 import { FaFilm, FaSearch, FaStar, FaUser } from "react-icons/fa";
+import "./styles.css";
 
 function Capabilities() {
   const capabilities = [
@@ -22,11 +23,11 @@ function Capabilities() {
   return (
     <div className={"d-flex flex-column"}>
       <h3 className={"pe-2"}>CinemaHub Enables You...</h3>
-      <div className={"d-flex flex-row overflow-hidden"}>
+      <div className={"d-flex flex-row overflow-auto"}>
         {capabilities.map((capability, index) => (
           <div
             className={
-              "d-flex flex-row rounded align-items-center p-3 text-white bg-secondary m-1 pt-0 pb-0"
+              "d-flex flex-row rounded align-items-center p-3 text-white bg-secondary m-1 pt-0 pb-0 wd-min-width-200"
             }
           >
             <div className={"m-2"}>{capability.icon}</div>

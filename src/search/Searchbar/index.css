@@ -8,45 +8,45 @@
 }
 
 .wd-search-type {
-    border-color: #949393;
-    border-bottom: none;
-    border-top: none;
-    border-left: none;
-    outline: none;
-    appearance: none; /* Removes default browser styling */
-    background-color: #f2f2f2;
-    margin-right: 10px;
-    padding: 12px 0px 12px 10px;
-    border-radius: 10px 0 0 10px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s;
+  border-color: #949393;
+  border-bottom: none;
+  border-top: none;
+  border-left: none;
+  outline: none;
+  appearance: none; /* Removes default browser styling */
+  background-color: #f2f2f2;
+  margin-right: 10px;
+  padding: 12px 0px 12px 10px;
+  border-radius: 10px 0 0 10px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .wd-search-input {
-    border: none;
-    outline: none;
-    background: none;
-    flex-grow: 1;
-    padding: 10px;
-    border-radius: 25px;
-    font-size: 16px;
+  border: none;
+  outline: none;
+  background: none;
+  flex-grow: 1;
+  padding: 10px;
+  border-radius: 25px;
+  font-size: 16px;
 }
 
 .wd-search-type option:hover {
-    box-shadow: 0 0 10px 100px #1882A8 inset;
-    background-color: #666;
+  box-shadow: 0 0 10px 100px #1882a8 inset;
+  background-color: #666;
 }
 
 .wd-search-button {
-    border: none;
-    outline: none;
-    background: none;
-    color: #0daece;
-    padding-bottom: 4px;
-    font-size: 20px;
-    margin-right: 10px;
+  border: none;
+  outline: none;
+  background: none;
+  color: #0daece;
+  padding-bottom: 4px;
+  font-size: 20px;
+  margin-right: 10px;
 }
 
 .wd-search-button:hover {

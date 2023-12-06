@@ -3,26 +3,12 @@ import Capabilities from "./Capabilities";
 import ImageThumbnailPane from "./ImageThumbnailPane";
 import { Link } from "react-router-dom";
 import ReviewThumbnailPane from "./ReviewThumbnailPane";
-import * as reviewClient from "../MongoDBClients/Reviews/client.js";
-import * as omdbClient from "../OMDbAPI/client.js";
+import * as reviewClient from "../MongoDBClients/reviewsClient.js";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import * as clientUser from "../MongoDBClients/Users/client";
-import { setAccount } from "../Login/reducer";
+import { useSelector } from "react-redux";
 
 function Home() {
-  const account = useSelector((state) => state.accountReducer.account);
-  const dispatch = useDispatch();
-  const fetchAccount = async () => {
-    const new_account = await clientUser.account();
-    if (
-      !account ||
-      (account.username && new_account.username !== account.username)
-    ) {
-      console.log("Setting account");
-      dispatch(setAccount(new_account));
-    }
-  };
+  const { currentUser } = useSelector((state) => state.user);
 
   const [recentReviews, setRecentReviews] = useState([]);
   const [recentFollowingReviews, setRecentFollowingReviews] = useState([]);
@@ -33,14 +19,14 @@ function Home() {
     setRecentReviews(reviews);
   };
   const fetchRecentFollowingReviews = async () => {
-    if (account) {
+    if (currentUser) {
       let reviews = await fetchReviewData(false, true, false);
       reviews = reviews.slice(0, 5);
       setRecentFollowingReviews(reviews);
     }
   };
   const fetchFollowingHighRatings = async () => {
-    if (account) {
+    if (currentUser) {
       const id_and_images = await fetchReviewData(true, true, true);
       setFollowingHighRatings(id_and_images);
     }
@@ -67,23 +53,18 @@ function Home() {
         return accumulator;
       }, []);
     }
-    if (onlyIncludeFollowing && account && account.following) {
+    if (onlyIncludeFollowing && currentUser && currentUser.following) {
       reviews = reviews.filter((review) =>
-        account.following.includes(review.username),
+        currentUser.following.includes(review.username),
       );
     }
 
     if (getPoster) {
-      let id_and_images = [];
+      let movies = [];
       for (const review of reviews) {
-        const movieObj = await omdbClient.findMovieById(review.movieId);
-        const id_and_image = {};
-        id_and_image["_id"] = review.movieId;
-        id_and_image["img"] = movieObj.Poster;
-        id_and_images.push(id_and_image);
+        movies.push(review.movieId);
       }
-      id_and_images = id_and_images.splice(0, 20);
-      return id_and_images;
+      return movies;
     } else {
       return reviews;
     }
@@ -93,7 +74,7 @@ function Home() {
     {
       thumbnailType: "movie",
       content: followingHighRatings,
-      pane_title: "Movies Your Friends's Rated Highly",
+      pane_title: "Movies Your Friend's Rated Highly",
     },
     {
       thumbnailType: "review",
@@ -113,12 +94,11 @@ function Home() {
   ];
 
   useEffect(() => {
-    fetchAccount();
     fetchHighRatings();
     fetchRecentReviews();
     fetchRecentFollowingReviews();
     fetchFollowingHighRatings();
-  }, [account]);
+  }, [currentUser]);
 
   return (
     <div>
@@ -138,8 +118,8 @@ function Home() {
       </div>
       <div className={"me-5 ms-5"}>
         <div className={"w-100 text-center pt-3"}>
-          {account ? (
-            <h1>Welcome back {account.username}</h1>
+          {currentUser ? (
+            <h1>Welcome back {currentUser.username}</h1>
           ) : (
             <div>
               <h1>Looks Like Your New Here</h1>
@@ -150,25 +130,24 @@ function Home() {
           )}
         </div>
         <div className={"d-flex flex-column justify-content-center"}>
-          {account === null && <Capabilities />}
+          {currentUser === null && <Capabilities />}
           {panes_to_title.map((pane, index) => {
-            if (pane.content.length !== 0 && pane.thumbnailType === "movie") {
-              return (
-                <ImageThumbnailPane
-                  img_title_id={pane.content}
-                  pane_title={pane.pane_title}
-                />
-              );
-            } else if (
-              pane.content.length !== 0 &&
-              pane.thumbnailType === "review"
-            ) {
-              return (
-                <ReviewThumbnailPane
-                  review_likes_username={pane.content}
-                  pane_title={pane.pane_title}
-                />
-              );
+            if (pane.content.length !== 0 || currentUser) {
+              if (pane.thumbnailType === "movie") {
+                return (
+                  <ImageThumbnailPane
+                    pane_title={pane.pane_title}
+                    movies={pane.content}
+                  />
+                );
+              } else if (pane.thumbnailType === "review") {
+                return (
+                  <ReviewThumbnailPane
+                    pane_title={pane.pane_title}
+                    reviews={pane.content}
+                  />
+                );
+              }
             }
           })}
         </div>

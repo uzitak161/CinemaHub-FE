@@ -5,7 +5,8 @@ import { Link } from "react-router-dom";
 import Modal from "react-modal";
 import StatModal from "./statModal";
 import EditModal from "./editModal";
-import * as reviewClient from "../MongoDBClients/Reviews/client.js";
+import * as reviewClient from "../MongoDBClients/reviewsClient.js";
+import { useSelector } from "react-redux";
 
 function generateAllUserReviews(reviews) {
   return (
@@ -67,7 +68,9 @@ function generateReviewCard(review) {
   return (
     <div className="card">
       <div className="card-body">
-        <h5 className="card-title">{review.movieId.title}</h5>
+        <Link to={`/details/${review.movieId.omdbId}`} className="movie-links">
+          <h5 className="card-title movie-links">{review.movieId.title}</h5>
+        </Link>
         <h6 className="card-subtitle mb-2 text-muted">
           {Array.from({ length: review.starRating }, (_, index) => (
             <span className="stars" key={index}>
@@ -83,12 +86,16 @@ function generateReviewCard(review) {
 }
 
 function Profile() {
-  const username = "John Doe";
-  const following = ["user5", "user4", "user2"];
-
-  // This is temporary, will eventually use redux to store Login status
-  const [loggedIn, setStatus] = useState(true);
+  const { currentUser } = useSelector((state) => state.user);
   const [reviews, setReviews] = useState([]);
+
+  const fetchReviews = async () => {
+    const new_reviews = await reviewClient.findReviewsByUsername(
+      currentUser.username,
+    );
+    setReviews(new_reviews);
+  };
+
   const [recommendations, setRecommendations] = useState([
     {
       movieTitle: "Pulp Fiction",
@@ -121,16 +128,9 @@ function Profile() {
   // Lookup the users profile image if they have one (optional)
   const image = undefined;
 
-  const followers = 10;
-  const reviewCount = 20;
-
-  const getReviews = async () => {
-    setReviews(await reviewClient.findAllReviews());
-  };
-
   useEffect(() => {
-    getReviews();
     getRecommendations();
+    fetchReviews();
   }, []);
 
   const modalStyle = {
@@ -158,7 +158,7 @@ function Profile() {
     }
   };
 
-  if (loggedIn) {
+  if (currentUser) {
     return (
       <div className="d-flex bd-highlight">
         <div className="p-2  bd-highlight">
@@ -179,17 +179,17 @@ function Profile() {
                 >
                   <div className="d-flex flex-column mx-2 stats">
                     <span className="">Followers</span>
-                    <span className="number">{followers}</span>
+                    <span className="number">{currentUser.followers.length}</span>
                   </div>
 
                   <div className="d-flex flex-column mx-2 stats">
                     <span className="">Reviews</span>
-                    <span className="number">{reviewCount}</span>
+                    <span className="number">{reviews.count}</span>
                   </div>
 
                   <div className="d-flex flex-column mx-2 stats">
                     <span className="">Following</span>
-                    <span className="number">{following.length}</span>
+                    <span className="number">{currentUser.following.length}</span>
                   </div>
                 </div>
                 <Modal
@@ -197,23 +197,23 @@ function Profile() {
                   onRequestClose={() => setStatModalOpen(false)}
                   style={modalStyle}
                 >
-                  <StatModal setModal={setStatModalOpen} />
+                  <StatModal setModal={setStatModalOpen} account={currentUser} />
                 </Modal>
                 <Modal
                   isOpen={EditModalOpen}
                   onRequestClose={() => setEditModalOpen(false)}
                   style={modalStyle}
                 >
-                  <EditModal setModal={setEditModalOpen} />
+                  <EditModal setModal={setEditModalOpen} account={currentUser} />
                 </Modal>
-                <h3 className="mt-2">User's Name</h3>
+                <h3 className="mt-2">{currentUser.username}</h3>
                 <textarea
                   readOnly
                   rows="4"
                   className="form-control my-2"
                   cols="50"
-                  placeholder="Enter your bio here..."
-                  value={"Read-Only Bio Area"}
+                  placeholder="No Bio/Description Currently Set"
+                  value={currentUser.bio}
                 ></textarea>
               </div>
             </div>

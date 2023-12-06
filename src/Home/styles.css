@@ -38,3 +38,18 @@
   font-size: 1.5em;
   display: block;
 }
+
+.wd-min-width-300 {
+  min-width: 300px;
+  width: auto;
+}
+
+.wd-min-width-200 {
+  min-width: 200px;
+  width: auto;
+}
+
+.wd-min-width-100 {
+  min-width: 100px;
+  width: auto;
+}

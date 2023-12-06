@@ -9,21 +9,21 @@ const Searchbar = ({ onSearch, setSearchTerm, searchTerm, setSearchType, searchT
         onSearch();
     };
 
-    return (
-        <form className="wd-search-bar" onSubmit={handleSubmit}>
-            <CustomDropdown onSelect={setSearchType} />
-            <input
-                type="text"
-                className="wd-search-input"
-                placeholder="Search..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <button type="submit" className="wd-search-button">
-                <FaSearch />
-            </button>
-        </form>
-    );
+  return (
+    <form className="wd-search-bar" onSubmit={handleSubmit}>
+      <CustomDropdown onSelect={setSearchType} />
+      <input
+        type="text"
+        className="wd-search-input"
+        placeholder="Search..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      <button type="submit" className="wd-search-button">
+        <FaSearch />
+      </button>
+    </form>
+  );
 };
 
 export default Searchbar;

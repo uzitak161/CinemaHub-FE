@@ -2,11 +2,10 @@ import { FaArrowRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { FaUserAlt } from "react-icons/fa";
 
-function StatModal({ setModal }) {
-  const followers = [
-    { id: 1, name: "John Doe", image: "https://via.placeholder.com/150" },
-    { id: 2, name: "Jane Doe", image: "https://via.placeholder.com/150" },
-  ];
+function StatModal({ setModal, account}) {
+
+  const followers = account.followers
+  const following = account.following
 
   return (
     <div className="row">
@@ -19,8 +18,9 @@ function StatModal({ setModal }) {
                 onClick={() => {
                   setModal(false);
                 }}
-                to={`/profile/${follower.id}`}
+                to={`/profile/${follower}`}
                 style={{ textDecoration: "none" }}
+                className="mt-2"
               >
                 <div className="row mt-2">
                   <div className="col">
@@ -32,7 +32,7 @@ function StatModal({ setModal }) {
                   </div>
                   <div className="col">
                     <p style={{ textDecoration: "none", color: "black" }}>
-                      {follower.name}
+                      {follower}
                     </p>
                   </div>
                 </div>
@@ -45,13 +45,13 @@ function StatModal({ setModal }) {
       <div className="col center-text">
         <h2 className="mb-2">Following</h2>
         <ul>
-          {followers.map((follower) => {
+          {following.map((follow) => {
             return (
               <Link
                 onClick={() => {
                   setModal(false);
                 }}
-                to={`/profile/${follower.id}`}
+                to={`/profile/${follow}`}
                 style={{ textDecoration: "none" }}
               >
                 <div className="row mt-2">
@@ -64,7 +64,7 @@ function StatModal({ setModal }) {
                   </div>
                   <div className="col">
                     <p style={{ textDecoration: "none", color: "black" }}>
-                      {follower.name}
+                      {follow}
                     </p>
                   </div>
                 </div>
