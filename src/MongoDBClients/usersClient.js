@@ -25,6 +25,9 @@ export const findUserByUsername = async (username) => {
 // note that this is userId not username
 export const updateUser = async (userId, user) => {
   const response = await request.put(`${USERS_API}/${userId}`, user);
+  if (response.status === 402) {
+    return undefined;
+  }
   return response.data;
 };
 export const deleteUser = async (username) => {
@@ -47,6 +50,11 @@ export const account = async () => {
   const response = await request.post(`${USERS_API}/account`);
   return response.data;
 };
+
+export const unfollowUser = async (userId) => {
+  const response = await request.put(`${USERS_API}/username/${userId}/unfollow`);
+  return response.data;
+}
 
 export const followUser = async (userId) => {
   const response = await request.put(`${USERS_API}/username/${userId}/follow`);

@@ -7,6 +7,7 @@ import * as clientUser from "../../MongoDBClients/usersClient";
 import * as reviewClient from "../../MongoDBClients/reviewsClient.js";
 import { useParams } from "react-router-dom";
 import * as userClient from "../../MongoDBClients/usersClient";
+import { useSelector } from "react-redux";
 
 function generateAllUserReviews(reviews) {
   return (
@@ -53,9 +54,13 @@ function generateReviewCard(review) {
 }
 
 function ProfileSpecific() {
+
+  const { currentUser } = useSelector((state) => state.user);
+
   const { id } = useParams();
   const [account, setAccount] = useState(undefined);
   const [reviews, setReviews] = useState([]);
+  const [following, setFollowing] = useState(currentUser.following.includes(id));
 
   const fetchAccount = async () => {
     const new_account = await clientUser.findUserByUsername(id);
@@ -72,7 +77,7 @@ function ProfileSpecific() {
 
   // Lookup the users profile image if they have one (optional)
   const image = undefined;
-  
+
   const modalStyle = {
     content: {
       top: "50%",
@@ -107,12 +112,13 @@ function ProfileSpecific() {
   useEffect(() => {
     fetchAccount();
     fetchReviews();
-  }, [id]);
+  }, [id, following]);
 
   const handleFollow = async () => {
-    const new_user = await userClient.followUser(account.username);
-    console.log(new_user); 
-    setAccount(new_user);
+    following
+      ? await userClient.unfollowUser(account.username)
+      : await userClient.followUser(account.username);
+      setFollowing(!following);
   };
 
   if (account) {
@@ -129,9 +135,18 @@ function ProfileSpecific() {
               />
             )}
             <div>
-              <button onClick={handleFollow} className="btn btn-success mt-2">
-                Follow
-              </button>
+              {following
+                ? (
+                  <button onClick={handleFollow} className="btn btn-danger mt-2">
+                    Unfollow
+                  </button>
+                )
+                : (
+                  <button onClick={handleFollow} className="btn btn-success mt-2">
+                    Follow
+                  </button>
+                )
+              }
             </div>
             <div
               onClick={() => setModalOpen(true)}
@@ -157,16 +172,17 @@ function ProfileSpecific() {
               onRequestClose={() => handleStatModalClose()}
               style={modalStyle}
             >
-              <StatModal setModal={setModalOpen} account={account}/>
+              <StatModal setModal={setModalOpen} account={account} />
             </Modal>
             <h3 className="mt-2">{account.username}</h3>
             <textarea
+              name="bio"
               readOnly
               rows="4"
               className="form-control my-2"
               cols="50"
-              placeholder="Enter your bio here..."
-              value="Specific User's bio "
+              placeholder={`${account.username} has not made a bio yet.`}
+              value={account.bio}
             ></textarea>
           </div>
         </div>

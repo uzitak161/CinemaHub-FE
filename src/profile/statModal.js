@@ -20,6 +20,7 @@ function StatModal({ setModal, account}) {
                 }}
                 to={`/profile/${follower}`}
                 style={{ textDecoration: "none" }}
+                className="mt-2"
               >
                 <div className="row mt-2">
                   <div className="col">

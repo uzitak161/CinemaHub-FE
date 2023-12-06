@@ -85,7 +85,6 @@ function generateReviewCard(review) {
 
 function Profile() {
   const { currentUser } = useSelector((state) => state.user);
-  console.log(currentUser)
   const [reviews, setReviews] = useState([]);
 
   const fetchReviews = async () => {
@@ -203,7 +202,7 @@ function Profile() {
                   onRequestClose={() => setEditModalOpen(false)}
                   style={modalStyle}
                 >
-                  <EditModal setModal={setEditModalOpen} />
+                  <EditModal setModal={setEditModalOpen} account={currentUser} />
                 </Modal>
                 <h3 className="mt-2">{currentUser.username}</h3>
                 <textarea
@@ -211,8 +210,8 @@ function Profile() {
                   rows="4"
                   className="form-control my-2"
                   cols="50"
-                  placeholder="Enter your bio here..."
-                  value={"Read-Only Bio Area"}
+                  placeholder="No Bio/Description Currently Set"
+                  value={currentUser.bio}
                 ></textarea>
               </div>
             </div>
