@@ -109,8 +109,10 @@ function ProfileSpecific() {
     fetchReviews();
   }, [id]);
 
-  const handleFollow = () => {
-    userClient.followUser(account.username);
+  const handleFollow = async () => {
+    const new_user = await userClient.followUser(account.username);
+    console.log(new_user); 
+    setAccount(new_user);
   };
 
   if (account) {

@@ -85,6 +85,7 @@ function generateReviewCard(review) {
 
 function Profile() {
   const { currentUser } = useSelector((state) => state.user);
+  console.log(currentUser)
   const [reviews, setReviews] = useState([]);
 
   const fetchReviews = async () => {
@@ -94,7 +95,6 @@ function Profile() {
     setReviews(new_reviews);
   };
 
-  const following = ["user5", "user4", "user2"];
   const [recommendations, setRecommendations] = useState([
     {
       movieTitle: "Pulp Fiction",
@@ -126,9 +126,6 @@ function Profile() {
 
   // Lookup the users profile image if they have one (optional)
   const image = undefined;
-
-  const followers = 10;
-  const reviewCount = 20;
 
   useEffect(() => {
     getRecommendations();
@@ -181,17 +178,17 @@ function Profile() {
                 >
                   <div className="d-flex flex-column mx-2 stats">
                     <span className="">Followers</span>
-                    <span className="number">{followers}</span>
+                    <span className="number">{currentUser.followers.length}</span>
                   </div>
 
                   <div className="d-flex flex-column mx-2 stats">
                     <span className="">Reviews</span>
-                    <span className="number">{reviewCount}</span>
+                    <span className="number">{reviews.count}</span>
                   </div>
 
                   <div className="d-flex flex-column mx-2 stats">
                     <span className="">Following</span>
-                    <span className="number">{following.length}</span>
+                    <span className="number">{currentUser.following.length}</span>
                   </div>
                 </div>
                 <Modal
@@ -199,7 +196,7 @@ function Profile() {
                   onRequestClose={() => setStatModalOpen(false)}
                   style={modalStyle}
                 >
-                  <StatModal setModal={setStatModalOpen} />
+                  <StatModal setModal={setStatModalOpen} account={currentUser} />
                 </Modal>
                 <Modal
                   isOpen={EditModalOpen}
