@@ -10,7 +10,6 @@ import * as userClient from "../../MongoDBClients/usersClient";
 import { useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 
-
 function generateAllUserReviews(reviews) {
   return (
     <div>
@@ -58,13 +57,14 @@ function generateReviewCard(review) {
 }
 
 function ProfileSpecific() {
-
   const { currentUser } = useSelector((state) => state.user);
 
   const { id } = useParams();
   const [account, setAccount] = useState(undefined);
   const [reviews, setReviews] = useState([]);
-  const [following, setFollowing] = useState(currentUser.following.includes(id));
+  const [following, setFollowing] = useState(
+    currentUser.following.includes(id),
+  );
 
   const navigate = useNavigate();
 
@@ -112,12 +112,11 @@ function ProfileSpecific() {
   const handleStatModalClose = () => {
     setModalOpen(false);
     fetchAccount();
-  }
-
+  };
 
   useEffect(() => {
     if (currentUser.username === id) {
-      navigate('/profile');
+      navigate("/profile");
     }
     fetchAccount();
     fetchReviews();
@@ -127,7 +126,7 @@ function ProfileSpecific() {
     following
       ? await userClient.unfollowUser(account.username)
       : await userClient.followUser(account.username);
-      setFollowing(!following);
+    setFollowing(!following);
   };
 
   if (account) {
@@ -144,18 +143,15 @@ function ProfileSpecific() {
               />
             )}
             <div>
-              {following
-                ? (
-                  <button onClick={handleFollow} className="btn btn-danger mt-2">
-                    Unfollow
-                  </button>
-                )
-                : (
-                  <button onClick={handleFollow} className="btn btn-success mt-2">
-                    Follow
-                  </button>
-                )
-              }
+              {following ? (
+                <button onClick={handleFollow} className="btn btn-danger mt-2">
+                  Unfollow
+                </button>
+              ) : (
+                <button onClick={handleFollow} className="btn btn-success mt-2">
+                  Follow
+                </button>
+              )}
             </div>
             <div
               onClick={() => setModalOpen(true)}

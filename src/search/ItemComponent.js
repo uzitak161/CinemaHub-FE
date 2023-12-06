@@ -33,14 +33,15 @@ function generateUserCard(user) {
             {user.username}
           </Link>
         </h5>
-        <div className='align-middle'>
-          {user.role === 'ADMIN' && <h6 className="card-subtitle mb-2 text-muted">
-            Role: Admin
-          </h6>}
-          {user.role === 'USER' &&
+        <div className="align-middle">
+          {user.role === "ADMIN" && (
+            <h6 className="card-subtitle mb-2 text-muted">Role: Admin</h6>
+          )}
+          {user.role === "USER" && (
             <h6 className="card-subtitle mb-2 text-muted">
               Following: {user.following && user.following.length}
-            </h6>}
+            </h6>
+          )}
           <h6 className="card-subtitle mb-2 text-muted">
             Posts: {user.reviews && user.reviews.length}
           </h6>

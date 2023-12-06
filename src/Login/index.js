@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./styles.css"; // You can create your own CSS file for additional styling
 import * as userClient from "../MongoDBClients/usersClient";
+import {setCurrentUser} from "./reducer";
+import {useDispatch} from "react-redux";
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(true);
   const [userRole, setUserRole] = useState("USER");
   const [credentials, setCredentials] = useState({
@@ -14,6 +17,7 @@ const Login = () => {
   const signIn = async () => {
     const response = await userClient.signin(credentials);
     if (response) {
+      dispatch(setCurrentUser(response));
       navigate("/home");
     } else {
       alert("Username or password incorrect");
@@ -23,7 +27,8 @@ const Login = () => {
     try {
       console.log("Signing up");
       const user = { ...credentials, role: userRole };
-      await userClient.signup(user);
+      const response = await userClient.signup(user);
+      dispatch(setCurrentUser(response));
       navigate("/home");
     } catch (err) {
       alert("Username already taken");

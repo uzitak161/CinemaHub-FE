@@ -2,14 +2,10 @@ import { useState, useEffect } from "react";
 import { setCurrentUser } from "../Login/reducer";
 import * as userClient from "../MongoDBClients/usersClient.js";
 
-
 function EditModal({ setModal, account }) {
-
   const [formData, setFormData] = useState(account);
 
-  useEffect(() => {
-
-  }, []); // Empty dependency array ensures this effect runs only once on mount
+  useEffect(() => {}, []); // Empty dependency array ensures this effect runs only once on mount
 
   const handleChange = (e) => {
     setFormData({
@@ -86,7 +82,11 @@ function EditModal({ setModal, account }) {
         </div>
 
         <div className="float-end mt-3">
-          <button type="submit" className="btn btn-primary" onClick={() => handleSubmit}>
+          <button
+            type="submit"
+            className="btn btn-primary"
+            onClick={() => handleSubmit}
+          >
             Save Changes
           </button>
           <button

@@ -179,7 +179,9 @@ function Profile() {
                 >
                   <div className="d-flex flex-column mx-2 stats">
                     <span className="">Followers</span>
-                    <span className="number">{currentUser.followers.length}</span>
+                    <span className="number">
+                      {currentUser.followers.length}
+                    </span>
                   </div>
 
                   <div className="d-flex flex-column mx-2 stats">
@@ -189,7 +191,9 @@ function Profile() {
 
                   <div className="d-flex flex-column mx-2 stats">
                     <span className="">Following</span>
-                    <span className="number">{currentUser.following.length}</span>
+                    <span className="number">
+                      {currentUser.following.length}
+                    </span>
                   </div>
                 </div>
                 <Modal
@@ -197,14 +201,20 @@ function Profile() {
                   onRequestClose={() => setStatModalOpen(false)}
                   style={modalStyle}
                 >
-                  <StatModal setModal={setStatModalOpen} account={currentUser} />
+                  <StatModal
+                    setModal={setStatModalOpen}
+                    account={currentUser}
+                  />
                 </Modal>
                 <Modal
                   isOpen={EditModalOpen}
                   onRequestClose={() => setEditModalOpen(false)}
                   style={modalStyle}
                 >
-                  <EditModal setModal={setEditModalOpen} account={currentUser} />
+                  <EditModal
+                    setModal={setEditModalOpen}
+                    account={currentUser}
+                  />
                 </Modal>
                 <h3 className="mt-2">{currentUser.username}</h3>
                 <textarea

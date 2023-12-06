@@ -52,9 +52,11 @@ export const account = async () => {
 };
 
 export const unfollowUser = async (userId) => {
-  const response = await request.put(`${USERS_API}/username/${userId}/unfollow`);
+  const response = await request.put(
+    `${USERS_API}/username/${userId}/unfollow`,
+  );
   return response.data;
-}
+};
 
 export const followUser = async (userId) => {
   const response = await request.put(`${USERS_API}/username/${userId}/follow`);

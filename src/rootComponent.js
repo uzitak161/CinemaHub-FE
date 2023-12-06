@@ -6,6 +6,7 @@ import * as client from "./MongoDBClients/usersClient";
 function RootComponent({ children }) {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
+  console.log("RootComponent");
   const fetchUser = async () => {
     try {
       const user = await client.account();

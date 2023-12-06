@@ -1,10 +1,10 @@
 .wd-search-bar {
-    display: flex;
-    align-items: center;
-    background-color: #f2f2f2;
-    border-radius: 10px;
-    margin: 0px 15px 5px 15px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Optional: Adds a subtle shadow for depth */
+  display: flex;
+  align-items: center;
+  background-color: #f2f2f2;
+  border-radius: 10px;
+  margin: 0px 15px 5px 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Optional: Adds a subtle shadow for depth */
 }
 
 .wd-search-type {
@@ -50,72 +50,72 @@
 }
 
 .wd-search-button:hover {
-    color: #666;
+  color: #666;
 }
 
 .wd-custom-dropdown {
-    position: relative;
+  position: relative;
 }
 
 .wd-dropdown-header {
-    border-color: #ff0b0b;
-    /* border-bottom: none;
+  border-color: #ff0b0b;
+  /* border-bottom: none;
     border-top: none;
     border-left: none; */
-    outline: none;
-    
-    padding: 10px 15px;
-    border-radius: 10px 0 0 10px;
-    background-color: #f2f2f2;
-    margin-right: 10px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  outline: none;
+
+  padding: 10px 15px;
+  border-radius: 10px 0 0 10px;
+  background-color: #f2f2f2;
+  margin-right: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .wd-dropdown-header:hover {
-    background-color: #ccc;
+  background-color: #ccc;
 }
 
 .wd-dropdown-list {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
 }
 
 .wd-dropdown-item {
-    padding: 10px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
 .wd-dropdown-item:hover {
-    background-color: #f2f2f2;
+  background-color: #f2f2f2;
 }
 
 .wd-dropdown-selected-label {
-    font-weight: 500;
+  font-weight: 500;
 }
 
 .wd-dropdown-label {
-    color: black;
+  color: black;
 }
 
-.wd-dropdown-item:hover .wd-dropdown-img{
-    color: #0daece;
+.wd-dropdown-item:hover .wd-dropdown-img {
+  color: #0daece;
 }
 
 .wd-dropdown-item:hover .wd-dropdown-label {
-    color: #0daece;
+  color: #0daece;
 }
 
 .wd-dropdown-item svg {
-    margin-right: 5px;
+  margin-right: 5px;
 }
