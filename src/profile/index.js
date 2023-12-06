@@ -68,7 +68,9 @@ function generateReviewCard(review) {
   return (
     <div className="card">
       <div className="card-body">
-        <h5 className="card-title">{review.movieId.title}</h5>
+        <Link to={`/details/${review.movieId.omdbId}`} className="movie-links">
+          <h5 className="card-title movie-links">{review.movieId.title}</h5>
+        </Link>
         <h6 className="card-subtitle mb-2 text-muted">
           {Array.from({ length: review.starRating }, (_, index) => (
             <span className="stars" key={index}>
