@@ -8,6 +8,7 @@ import * as reviewClient from "../../MongoDBClients/reviewsClient.js";
 import { useParams } from "react-router-dom";
 import * as userClient from "../../MongoDBClients/usersClient";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 function generateAllUserReviews(reviews) {
   return (
@@ -62,6 +63,8 @@ function ProfileSpecific() {
   const [reviews, setReviews] = useState([]);
   const [following, setFollowing] = useState(currentUser.following.includes(id));
 
+  const navigate = useNavigate();
+
   const fetchAccount = async () => {
     const new_account = await clientUser.findUserByUsername(id);
     setAccount(new_account);
@@ -110,9 +113,12 @@ function ProfileSpecific() {
 
 
   useEffect(() => {
+    if (currentUser.username === id) {
+      navigate('/profile');
+    }
     fetchAccount();
     fetchReviews();
-  }, [id, following]);
+  }, [id, following, navigate]);
 
   const handleFollow = async () => {
     following
