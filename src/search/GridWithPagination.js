@@ -12,8 +12,15 @@ const GridWithPagination = ({ handleSearch, items, type, totalItems }) => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  return (
-    <div className='container-fluid'>
+  return items.length === 0 ? ( 
+    <div className='container-fluid mt-4'>
+      <div className='row mb-4'>
+        {/* <h3>No results found</h3> */}
+      </div>
+    </div>
+  ) :
+    (
+    <div className='container-fluid mt-4'>
       <div className='row mb-4'>
         {items.map(item =>
         (

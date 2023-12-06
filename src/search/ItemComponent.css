@@ -5,10 +5,9 @@
     transition: filter 0.3s;
 } */
 
-.movie-container {
+.item-container {
     margin: 10px;
     position: relative;
-
 }
 
 .movie-container img {

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './CustomDropdown.css';
 import { FaFilm, FaTv, FaPlayCircle, FaUser, FaCaretDown, FaVideo } from 'react-icons/fa';
 
 const CustomDropdown = ({ onSelect }) => {
