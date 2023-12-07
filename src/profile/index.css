@@ -89,3 +89,10 @@ body {
 .movie-links:hover {
   color: darkgoldenrod;
 }
+
+.reel-movie:hover {
+  border-color: #f1c40f !important;
+  text-emphasis: bold;
+  text-shadow: #f1c40f 0 0 10px;
+
+}

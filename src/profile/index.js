@@ -7,6 +7,50 @@ import StatModal from "./statModal";
 import EditModal from "./editModal";
 import * as reviewClient from "../MongoDBClients/reviewsClient.js";
 import { useSelector } from "react-redux";
+import * as reelsClient from "../MongoDBClients/reelsClient.js";
+import ReelModal from "./reelModal";
+
+
+function generateReelCard(reel, setSelectedReel, setNewReelModalOpen) {
+
+
+  const handleEdit = () => {
+    console.log("clicked")
+    setSelectedReel(reel);
+    setNewReelModalOpen(true);
+  }
+
+  const movies = reel.movies;
+  return (
+    <Link
+      // to={`/details/${reel.omdbMovieId}`}
+      style={{ textDecoration: "none" }}
+      className="w-50"
+    >
+      <div className="card w-50">
+        <div className="card-body">
+          <h5 className="card-title">{reel.title}
+            <button onClick={handleEdit} className="float-end btn btn-outline-secondary">
+              Edit
+            </button>
+          </h5>
+          <h6 className="card-subtitle my-3 text-muted">
+            Movies in Reel:
+          </h6>
+          <div className="card-text list-group">
+            {movies.map((movie) => {
+              return (
+                <Link to={`/details/${movie.omdbId}`} style={{ textDecoration: "none" }}>
+                  <p className="list-group-item border rounded reel-movie"><b>{movie.title}</b></p>
+                </Link>)
+            }
+            )}
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
 
 function generateAllUserReviews(reviews) {
   return (
@@ -88,6 +132,7 @@ function generateReviewCard(review) {
 function Profile() {
   const { currentUser } = useSelector((state) => state.user);
   const [reviews, setReviews] = useState([]);
+  const [reels, setReels] = useState([]);
 
   const fetchReviews = async () => {
     const new_reviews = await reviewClient.findReviewsByUsername(
@@ -95,6 +140,13 @@ function Profile() {
     );
     setReviews(new_reviews);
   };
+
+  const fetchReels = async () => {
+    const all_reels = await reelsClient.findAllReels();
+    const currentUserReelIds = currentUser.reels.map((reel) => reel._id);
+    const new_reels = all_reels.filter(reel => currentUserReelIds.includes(reel._id));
+    setReels(new_reels);
+  }
 
   const [recommendations, setRecommendations] = useState([
     {
@@ -108,8 +160,12 @@ function Profile() {
       description: "Movie Description",
     },
   ]);
+
+  // State vars to control Modals
   const [statModalOpen, setStatModalOpen] = useState(false);
   const [EditModalOpen, setEditModalOpen] = useState(false);
+  const [newReelModalOpen, setNewReelModalOpen] = useState(false);
+  const [selectedReel, setSelectedReel] = useState(null);
 
   const getRecommendations = async () => {
     let reviews = await reviewClient.findAllReviews();
@@ -131,6 +187,7 @@ function Profile() {
   useEffect(() => {
     getRecommendations();
     fetchReviews();
+    fetchReels();
   }, []);
 
   const modalStyle = {
@@ -216,6 +273,18 @@ function Profile() {
                     account={currentUser}
                   />
                 </Modal>
+                <Modal
+                  isOpen={newReelModalOpen}
+                  onRequestClose={() => setNewReelModalOpen(false)}
+                  style={modalStyle}
+                >
+                  <ReelModal
+                    setModal={setNewReelModalOpen}
+                    selectedReel={selectedReel}
+                    reels={reels}
+                    setReels={setReels}
+                  />
+                </Modal>
                 <h3 className="mt-2">{currentUser.username}</h3>
                 <textarea
                   readOnly
@@ -235,8 +304,12 @@ function Profile() {
 
           <div className="row">
             <div className="col">
-              <h2> Your Recent Reviews </h2>
-              {generateAllUserReviews(getRecent(reviews))}
+              <h2 className="m-2"> Your Reels </h2>
+              <div>
+                {reels.map((reel) => {
+                  return generateReelCard(reel, setSelectedReel, setNewReelModalOpen);
+                })}
+              </div>
             </div>
           </div>
         </div>
