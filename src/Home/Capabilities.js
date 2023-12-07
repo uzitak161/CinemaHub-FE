@@ -22,6 +22,7 @@ function Capabilities() {
   ];
   return (
     <div className={"d-flex flex-column"}>
+      <div className={"rounded wd-bg-light-grey p-3"}>
       <h3 className={"pe-2"}>CinemaHub Enables You...</h3>
       <div className={"d-flex flex-row overflow-auto"}>
         {capabilities.map((capability, index) => (
@@ -35,6 +36,7 @@ function Capabilities() {
             <div className={"ms-2"}>{capability.description}</div>
           </div>
         ))}
+      </div>
       </div>
     </div>
   );
