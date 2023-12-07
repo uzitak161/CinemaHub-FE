@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import "./search.css";
-import GridWithPagination from "./GridWithPagination";
+import "./index.css";
+import GridWithPagination from "./Result/GridWithPagination";
 import { searchMoviesByTitle } from "../OMDbAPI/client";
 import { getUsersByNames } from "../MongoDBClients/usersClient";
 import Searchbar from "./Searchbar";
@@ -11,6 +11,12 @@ const SearchComponent = () => {
   const [results, setResults] = useState([]); // Array of movie or user objects
   const [totalItems, setTotalItems] = useState(0); // Total number of items
   const [filters, setFilters] = useState({}); // for storing filters
+
+  const handleSearchTypeChange = (event) => {
+    setSearchType(event);
+    setResults([]);
+    setTotalItems(0);
+  }
 
   const handleSearch = (pageNumber) => {
     const trimmedSearchTerm = searchTerm.trim();
@@ -54,7 +60,7 @@ const SearchComponent = () => {
   return (
     <div className='mt-2'>
       <Searchbar onSearch={handleSearch} setSearchTerm={setSearchTerm} searchTerm={searchTerm}
-        setSearchType={setSearchType} setFilters={setFilters} filters={filters} searchType={searchType} />
+        setSearchType={handleSearchTypeChange} setFilters={setFilters} filters={filters} searchType={searchType} />
       <GridWithPagination items={results} type={searchType} handleSearch={handleSearch}
         totalItems={totalItems} />
     </div>
