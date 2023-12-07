@@ -3,7 +3,6 @@ import "./search.css";
 import GridWithPagination from "./GridWithPagination";
 import { searchMoviesByTitle } from "../OMDbAPI/client";
 import { getUsersByNames } from "../MongoDBClients/usersClient";
-import FilterComponent from "./FilterComponent";
 import Searchbar from "./Searchbar";
 
 const SearchComponent = () => {
@@ -16,7 +15,13 @@ const SearchComponent = () => {
   const handleSearch = (pageNumber) => {
     const trimmedSearchTerm = searchTerm.trim();
     if (trimmedSearchTerm.length === 0) {
-      return;
+      if (searchType === 'users') {
+        getUsersByNames(trimmedSearchTerm, filters).then((response) => {
+          setResults(response);
+          setTotalItems(response.totalResults);
+        });
+        return;
+      }
     }
     const filtersWithPageNumber = { ...filters, pageNumber };
     if (searchType === "users") {
@@ -46,29 +51,13 @@ const SearchComponent = () => {
   };
 
   return (
-    <div className="mt-2">
-      <Searchbar
-        onSearch={handleSearch}
-        setSearchTerm={setSearchTerm}
-        searchTerm={searchTerm}
-        setSearchType={setSearchType}
-        setFilters={setFilters}
-        filters={filters}
-        searchType={searchType}
-      />
-      <FilterComponent
-        onFilterChange={setFilters}
-        searchType={searchType}
-        filters={filters}
-      />
-      <GridWithPagination
-        items={results}
-        type={searchType}
-        handleSearch={handleSearch}
-        totalItems={totalItems}
-      />
+    <div className='mt-2'>
+      <Searchbar onSearch={handleSearch} setSearchTerm={setSearchTerm} searchTerm={searchTerm}
+        setSearchType={setSearchType} setFilters={setFilters} filters={filters} searchType={searchType} />
+      <GridWithPagination items={results} type={searchType} handleSearch={handleSearch}
+        totalItems={totalItems} />
     </div>
   );
-};
+}
 
 export default SearchComponent;

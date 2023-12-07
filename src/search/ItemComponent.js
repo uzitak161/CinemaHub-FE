@@ -18,37 +18,34 @@ function generateMovieCard(movie) {
   );
 }
 
-// Generate a user card within the search results (center column)
-function generateUserCard(user) {
+const UserList = (user) => {
   return (
-    <div className="card item-container col-2">
-      <div className="card-body d-flex flex-row">
-        <h5 className="card-title profile-pic">
-          <Link className="profile-pic" to="/profile/1">
-            {user.profilePic ? (
-              <img src={user.profilePic} alt={user.username} />
-            ) : (
-              <FaUserAlt className="avatar" />
-            )}
-            {user.username}
-          </Link>
-        </h5>
-        <div className="align-middle">
-          {user.role === "ADMIN" && (
-            <h6 className="card-subtitle mb-2 text-muted">Role: Admin</h6>
-          )}
-          {user.role === "USER" && (
-            <h6 className="card-subtitle mb-2 text-muted">
-              Following: {user.following && user.following.length}
-            </h6>
-          )}
-          <h6 className="card-subtitle mb-2 text-muted">
-            Posts: {user.reviews && user.reviews.length}
-          </h6>
-        </div>
+    <Link  to={`/profile/${user.username}`} className="p-0 m-0 text-decoration-none ">
+    <div key={user.username} className="user-item">
+      {user.profilePic ? (
+        <img src={user.profilePic} alt={`${user.username}'s profile`} className="profile-pic" />
+      ) : (
+        <FaUserAlt className="avatar-pic" />
+      )}
+      <div className="user-details">
+        <div className="username">{user.username}</div>
+        <div className="role">{user.role}</div>
+        {user.role === 'USER' && (
+          <div className="social-info">
+            <span>Following: {user.following.length}</span>
+            <span>Followers: {user.followers.length}</span>
+          </div>
+        )}
+        {/* Display reels if needed */}
       </div>
     </div>
+    </Link>
   );
+};
+
+// Generate a user card within the search results (center column)
+function generateUserCard(user) {
+  return UserList(user);
 }
 
 const ItemComponent = ({ item, type }) => {

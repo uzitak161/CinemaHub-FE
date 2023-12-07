@@ -18,11 +18,11 @@ const userFilterOptions = [
 
 const FilterComponent = ({ searchType, onFilterChange, filters }) => {
   const handleChange = (filterName, value) => {
-    onFilterChange(filterName, value);
+    onFilterChange({ ...filters, [filterName]: value });
   };
 
   return (
-    <div>
+    <div className="filter-options">
       {(searchType === "users" ? userFilterOptions : movieFilterOptions).map(
         (option) => (
           <div key={option.name}>

@@ -63,6 +63,10 @@ export const followUser = async (userId) => {
   return response.data;
 };
 export const getUsersByNames = async (name, filters) => {
+  console.log(filters);
+  if (!name) {
+    return await findAllUsers();
+  }
   let url = `${USERS_API}/names/${name}`;
   if (filters.role && filters.role !== "all") {
     url += `?role=${filters.role}`;

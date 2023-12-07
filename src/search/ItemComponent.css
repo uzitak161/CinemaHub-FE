@@ -1,26 +1,19 @@
-/* Movie styles */
-/* .item-container img {
-    width: 100%;
-    height: auto;
-    transition: filter 0.3s;
-} */
-
 .item-container {
   margin: 10px;
   position: relative;
 }
 
-.movie-container img {
+.item-container img {
   width: 100%;
   height: 100%;
   transition: filter 0.3s;
 }
 
-.movie-container:hover img {
+.item-container:hover img {
   filter: brightness(50%);
 }
 
-.movie-container:hover .movie-info {
+.item-container:hover .movie-info {
   opacity: 1;
 }
 
@@ -46,4 +39,44 @@
 
 .movie-year {
   font-size: 16px;
+}
+
+
+
+
+.user-item {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.profile-pic {
+  width: 50px;  /* Adjust size as needed */
+  height: 50px; /* Adjust size as needed */
+  border-radius: 50%; /* Circular profile pictures */
+  margin-right: 15px;
+}
+
+.user-details {
+  flex-grow: 1;
+}
+
+.username {
+  font-weight: bold;
+}
+
+.role {
+  font-style: italic;
+  color: #666;
+}
+
+.social-info {
+  margin-top: 5px;
+  color: #666;
+}
+
+.social-info span {
+  margin-right: 10px;
 }

@@ -39,7 +39,7 @@
   background-color: #666;
 }
 
-.wd-search-button {
+.wd-search-button, .wd-filter-button {
   border: none;
   outline: none;
   background: none;
@@ -49,8 +49,8 @@
   margin-right: 10px;
 }
 
-.wd-search-button:hover {
-  color: #666;
+.wd-search-button:hover, .wd-filter-button:hover {
+    color: #666;
 }
 
 .wd-custom-dropdown {
