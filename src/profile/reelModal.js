@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { setCurrentUser } from "../Login/reducer";
-import * as userClient from "../MongoDBClients/usersClient.js";
+import * as reelsClient from "../MongoDBClients/reelsClient.js";
 import { useDispatch } from "react-redux";
 import { FaTrash } from "react-icons/fa";
 
@@ -9,7 +9,17 @@ function ReelModal({ setModal, selectedReel, reels, setReels }) {
 
     const dispatch = useDispatch();
 
-    useEffect(() => { }, []); // Empty dependency array ensures this effect runs only once on mount
+    useEffect(() => {setFormData(selectedReel) }, []); // Empty dependency array ensures this effect runs only once on mount
+
+
+    const handleDelete =  (id) => {
+        formData.movies = formData.movies.filter((movie) => movie._id !== id);
+        setFormData({
+            ...formData,
+            movies: formData.movies
+        })
+        console.log(formData)
+    }
 
     const handleChange = (e) => {
         setFormData({
@@ -19,13 +29,21 @@ function ReelModal({ setModal, selectedReel, reels, setReels }) {
     };
 
     const handleSubmit = async (e) => {
+        e.preventDefault();
+        
+        // Get only IDs of movies
+        const movieIds = formData.movies.map((movie) => movie._id);
+        setFormData({ ...formData, movies: movieIds });
+        const response = await reelsClient.updateReel(selectedReel._id, formData);
+        console.log(response)
+        setModal(false);
 
     };
 
     return (
         <div className="container mt-2">
             <h1 className="text-center">Editing Reel "{selectedReel.title}"</h1>
-            <form>
+            <div>
                 <div className="mb-3">
                     <label htmlFor="title" className="form-label">
                         Title:
@@ -56,26 +74,23 @@ function ReelModal({ setModal, selectedReel, reels, setReels }) {
                     />
                 </div>
 
-                <div className="mb-3">
+                <div className="mb-3 list-group">
                     {formData.movies.map(
                         (movie) => (
-                            <div className="d-flex flex-row rounded m-2 p-2 pe-4 ps-4">
-                                <div className="align-self-center wd-font-size-large">
-                                    {movie.title}
-                                </div>
-                                <div>
-                                    <button
-                                        className={"wd-min-height-50 btn float-end"}
-
-                                    >
-                                        <FaTrash size={40} color={"red"} />
-                                    </button>
-                                </div>
+                            <div className="list-group-item">
+                                {movie.title}
+                                <button
+                                    className={"wd-min-height-50 btn float-end"}
+                                    onClick={() => handleDelete(movie._id)}
+                                >
+                                    <FaTrash size={40} color={"red"} />
+                                </button>
                             </div>
                         )
                     )}
                 </div>
-            </form>
+                <button className="float-end btn btn-success" onClick={handleSubmit}>Submit</button>
+            </div>
 
         </div>
     );
