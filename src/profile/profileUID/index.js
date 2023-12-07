@@ -9,6 +9,40 @@ import { useParams } from "react-router-dom";
 import * as userClient from "../../MongoDBClients/usersClient";
 import { useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
+import * as reelsClient from "../../MongoDBClients/reelsClient";
+
+
+function generateReelCard(reel) {
+
+
+  const movies = reel.movies;
+  return (
+    <Link
+      // to={`/details/${reel.omdbMovieId}`}
+      style={{ textDecoration: "none" }}
+      className="w-50"
+    >
+      <div className="card w-50">
+        <div className="card-body">
+          <h5 className="card-title">{reel.title}</h5>
+          <h6 className="card-subtitle my-3 text-muted">
+            Movies in Reel:
+          </h6>
+          <div className="card-text list-group">
+            {movies.map((movie) => {
+              return (
+                <Link to={`/details/${movie.omdbId}`} style={{ textDecoration: "none" }}>
+                  <p className="list-group-item border rounded reel-movie"><b>{movie.title}</b></p>
+                </Link>)
+            }
+            )}
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 
 function generateAllUserReviews(reviews) {
   return (
@@ -63,14 +97,22 @@ function ProfileSpecific() {
   const [account, setAccount] = useState(undefined);
   const [reviews, setReviews] = useState([]);
   const [following, setFollowing] = useState(
-    currentUser.following.includes(id),
+    currentUser ? currentUser.following.includes(id) : false,
   );
+  const [reels, setReels] = useState([]);
 
   const navigate = useNavigate();
 
   const fetchAccount = async () => {
     const new_account = await clientUser.findUserByUsername(id);
     setAccount(new_account);
+    const reelIds = new_account.reels;
+    const new_reels = await Promise.all(
+      reelIds.map((reel) => reelsClient.findReelById(reel._id)),
+    );
+    setReels(new_reels);
+    console.log(new_reels)
+
   };
 
   const fetchReviews = async () => {
@@ -98,16 +140,6 @@ function ProfileSpecific() {
     },
   };
 
-  const getRecent = (array) => {
-    if (!array) {
-      return [];
-    }
-    if (array.length < 3) {
-      return array;
-    } else {
-      return array.slice(0, 3);
-    }
-  };
 
   const handleStatModalClose = () => {
     setModalOpen(false);
@@ -115,6 +147,7 @@ function ProfileSpecific() {
   };
 
   useEffect(() => {
+    // Navigate to profile if the user is viewing their own profile
     if (currentUser.username === id) {
       navigate("/profile");
     }
@@ -190,10 +223,15 @@ function ProfileSpecific() {
               value={account.bio}
             ></textarea>
           </div>
+          <div className="mx-3">
+            <h2> {account.username}'s Reels </h2>
+            {reels.map((reel) => { return generateReelCard(reel) })}
+          </div>
         </div>
-        <div className="col">
+        
+        <div className="col p-2 mx-4 flex-grow-1 bd-highlight center-text">
           <h2> {account.username}'s Reviews </h2>
-          {generateAllUserReviews(getRecent(reviews))}
+          {generateAllUserReviews(reviews)}
         </div>
       </div>
     );

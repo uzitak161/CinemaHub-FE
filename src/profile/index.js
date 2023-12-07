@@ -188,7 +188,7 @@ function Profile() {
     getRecommendations();
     fetchReviews();
     fetchReels();
-  }, []);
+  }, [newReelModalOpen]);
 
   const modalStyle = {
     content: {
