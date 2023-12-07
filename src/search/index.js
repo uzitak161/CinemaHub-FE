@@ -20,8 +20,8 @@ const SearchComponent = () => {
           setResults(response);
           setTotalItems(response.totalResults);
         });
-        return;
       }
+      return;
     }
     const filtersWithPageNumber = { ...filters, pageNumber };
     if (searchType === "users") {
@@ -39,6 +39,7 @@ const SearchComponent = () => {
       // Call function to search movies
       searchMoviesByTitle(trimmedSearchTerm, filtersWithPageNumber).then(
         (response) => {
+          console.log("Response: ", response);
           if (response.Response === "False") {
             alert(response.Error);
             return;
