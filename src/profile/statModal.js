@@ -2,10 +2,9 @@ import { FaArrowRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { FaUserAlt } from "react-icons/fa";
 
-function StatModal({ setModal, account}) {
-
-  const followers = account.followers
-  const following = account.following
+function StatModal({ setModal, account }) {
+  const followers = account.followers;
+  const following = account.following;
 
   return (
     <div className="row">

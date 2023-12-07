@@ -1,5 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { FaFilm, FaTv, FaPlayCircle, FaUser, FaCaretDown, FaVideo } from 'react-icons/fa';
+import React, { useState, useEffect, useRef } from "react";
+import {
+  FaFilm,
+  FaTv,
+  FaPlayCircle,
+  FaUser,
+  FaCaretDown,
+  FaVideo,
+} from "react-icons/fa";
 
 const CustomDropdown = ({ onSelect }) => {
   const [isOpen, setIsOpen] = useState(false);

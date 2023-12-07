@@ -6,104 +6,91 @@ import "./styles.css";
 import ReviewPane from "./ReviewPane";
 import { FaCheckCircle } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import * as omdbClient from "../OMDbAPI/client";
+import Reels from "./Reels";
 
 function Details() {
   const { currentUser } = useSelector((state) => state.user);
   const { did } = useParams();
-  const [review, setReview] = useState({
-    movieId: did,
-    username: currentUser ? currentUser.username : "Anonymous",
+  const defaultReview = {
+    username: currentUser ? currentUser.username : "ERROR",
     text: "",
     starRating: 1,
     createdAt: new Date(),
-  });
-  const [omdbDetails, setOmdbDetails] = useState({});
-  const fetchOmdbDetails = async () => {
-    const cachedMovie = await moviesClient.findMovieByOmdbID(did);
-    if (cachedMovie == null) {
-      setOmdbDetails(await moviesClient.findMovieByOmdbID(did));
-    } else {
-      setOmdbDetails(cachedMovie);
-    }
   };
-
+  const [review, setReview] = useState(defaultReview);
+  const [movie, setMovie] = useState({});
   const [movieReviews, setMovieReviews] = useState([]);
-  const fetchMovieReviews = async () => {
+  const fetchMovie = async () => {
     const cachedMovie = await moviesClient.findMovieByOmdbID(did);
+    console.log("Cached Movie: ", JSON.stringify(cachedMovie));
     if (cachedMovie == null) {
+      const response = await omdbClient.findMovieById(did);
+      const savedMovie = await moviesClient.createMovie({
+        title: response.Title,
+        plot: response.Plot,
+        poster: response.Poster,
+        omdbId: did,
+      });
+      setMovie(savedMovie);
       setMovieReviews([]);
     } else {
+      setMovie(cachedMovie);
       setMovieReviews(await reviewClient.findReviewsByMovieId(cachedMovie._id));
     }
   };
 
   useEffect(() => {
-    fetchOmdbDetails();
-    fetchMovieReviews();
+    fetchMovie();
   }, [review]);
 
   const saveReview = async () => {
-    if (currentUser && currentUser.username) {
-      setReview({
-        ...review,
-        username: currentUser.username,
-        createdAt: new Date(),
-      });
-      await reviewClient.createReview(review);
-      setReview({
-        movieId: did,
-        username: currentUser.username,
-        text: "",
-        starRating: 1,
-        createdAt: new Date(),
-      });
-      fetchOmdbDetails();
+    console.log("Current User: ", JSON.stringify(currentUser));
+    if (currentUser === "") {
+      alert("You must be logged in to leave a review!");
+      setReview(defaultReview);
+      return;
     } else {
-      console.log("Please sign in to leave a review");
-      setReview({
-        ...review,
-        text: "Please sign in to leave a review",
-        starRating: 1,
-      });
+      const cachedMovie = await moviesClient.findMovieByOmdbID(did);
+      await reviewClient.createReview(review, cachedMovie._id);
     }
+    setReview(defaultReview);
   };
   return (
     <div>
       <div className={"d-fex flex-column position-relative"}>
-        {omdbDetails && (
+        {movie && (
           <div className={"d-flex flex-row"}>
             <div className={"pe-3"}>
               <img
                 className={"wd-details-poster"}
-                src={omdbDetails.poster}
-                alt={omdbDetails.title}
+                src={movie.poster}
+                alt={movie.title}
               />
             </div>
             <div className={"flex-grow-1 d-flex flex-column"}>
               <div className={"text-center p-2"}>
-                <h1 className={"wd-movie-title"}>{omdbDetails.title}</h1>
-                <h4>{omdbDetails.plot}</h4>
+                <h1 className={"wd-movie-title"}>{movie.title}</h1>
+                <h4>{movie.plot}</h4>
               </div>
               <div className={"bg-secondary text-white rounded p-2 me-2"}>
                 <div className={"d-flex flex-row justify-content-between"}>
                   <div className={"ms-2"}>
                     <label for={"star-rating"}>Star Rating</label>
-                    <select
-                      className="form-select"
+                    <input
+                      className="form-control"
                       id={"star-rating"}
                       onChange={(e) =>
-                        setReview({ ...review, starRating: e.target.value })
+                        setReview({
+                          ...review,
+                          starRating: e.target.valueAsNumber,
+                        })
                       }
                       value={review.starRating}
-                    >
-                      <option selected value="1">
-                        1
-                      </option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
-                      <option value="5">5</option>
-                    </select>
+                      type={"number"}
+                      min={1}
+                      max={5}
+                    ></input>
                   </div>
                   <h3>Write a Review</h3>
                   <button className={"btn"} onClick={() => saveReview()}>
@@ -129,10 +116,11 @@ function Details() {
             <ReviewPane
               pane_title={"CinemaHub Reviews"}
               reviews={movieReviews}
-              movie_title={omdbDetails.title}
+              movie_title={movie.title}
             />
           )}
         </div>
+        <div>{currentUser !== "" && <Reels movieId={movie._id} />}</div>
       </div>
     </div>
   );

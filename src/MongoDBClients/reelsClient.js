@@ -24,6 +24,10 @@ export const updateReel = async (reelId, reel) => {
   const response = await request.put(`${REELS_API}/${reelId}`, reel);
   return response.data;
 };
+export const addMovieToReel = async (reelId, movieId) => {
+  const response = await request.put(`${REELS_API}/${reelId}/${movieId}`);
+  return response.data;
+};
 export const deleteReel = async (reelId) => {
   const response = await request.delete(`${REELS_API}/${reelId}`);
   return response.data;

@@ -26,6 +26,7 @@ function Capabilities() {
       <div className={"d-flex flex-row overflow-auto"}>
         {capabilities.map((capability, index) => (
           <div
+            key={index}
             className={
               "d-flex flex-row rounded align-items-center p-3 text-white bg-secondary m-1 pt-0 pb-0 wd-min-width-200"
             }

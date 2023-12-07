@@ -1,15 +1,14 @@
 import { useState, useEffect } from "react";
 import { setCurrentUser } from "../Login/reducer";
 import * as userClient from "../MongoDBClients/usersClient.js";
-
+import { useDispatch } from "react-redux";
 
 function EditModal({ setModal, account }) {
-
   const [formData, setFormData] = useState(account);
 
-  useEffect(() => {
+  const dispatch = useDispatch();
 
-  }, []); // Empty dependency array ensures this effect runs only once on mount
+  useEffect(() => {}, []); // Empty dependency array ensures this effect runs only once on mount
 
   const handleChange = (e) => {
     setFormData({
@@ -19,17 +18,20 @@ function EditModal({ setModal, account }) {
   };
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
     const response = await userClient.updateUser(account.username, formData);
+    console.log(response)
     if (response) {
-      setCurrentUser(response);
+      dispatch(setCurrentUser(response));
     }
     setModal(false);
+    
   };
 
   return (
     <div className="container mt-5">
       <h1>Edit Profile</h1>
-      <form onSubmit={handleSubmit}>
+      <form>
         <div className="mb-3">
           <label htmlFor="username" className="form-label">
             Username:
@@ -86,7 +88,11 @@ function EditModal({ setModal, account }) {
         </div>
 
         <div className="float-end mt-3">
-          <button type="submit" className="btn btn-primary" onClick={() => handleSubmit}>
+          <button
+            type="submit"
+            className="btn btn-primary"
+            onClick={handleSubmit}
+          >
             Save Changes
           </button>
           <button

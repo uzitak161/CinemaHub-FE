@@ -6,6 +6,7 @@ import ReviewThumbnailPane from "./ReviewThumbnailPane";
 import * as reviewClient from "../MongoDBClients/reviewsClient.js";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import RootComponent from "../rootComponent";
 
 function Home() {
   const { currentUser } = useSelector((state) => state.user);
@@ -98,7 +99,7 @@ function Home() {
     fetchRecentReviews();
     fetchRecentFollowingReviews();
     fetchFollowingHighRatings();
-  }, [currentUser]);
+  }, []);
 
   return (
     <div>

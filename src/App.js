@@ -15,41 +15,39 @@ import ProtectedAdminRoute from "./protectedAdminRoute";
 
 function App() {
   return (
-    <Provider store={store}>
-      <RootComponent>
-        <HashRouter>
-          <div>
-            <NavBar />
-            <div style={{ marginTop: 56 }}>
-              <Routes>
-                <Route path="/" element={<Navigate to="/Home" />} />
-                <Route path="/Home" element={<Home />} />
-                <Route path="/Profile/:id" element={<ProfileSpecific />} />
-                <Route
-                  path="/Profile"
-                  element={
-                    <ProtectedRoute>
-                      <Profile />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route path="/Search" element={<Search />} />
-                <Route path="/Login" element={<Login />} />
-                <Route path="/Details/:did" element={<Details />} />
-                <Route
-                  path={"/Admin/*"}
-                  element={
-                    <ProtectedAdminRoute>
-                      <Admin />
-                    </ProtectedAdminRoute>
-                  }
-                />
-              </Routes>
-            </div>
+    <HashRouter>
+      <Provider store={store}>
+        <RootComponent>
+          <NavBar />
+          <div style={{ marginTop: 56 }}>
+            <Routes>
+              <Route path="/" element={<Navigate to="/Home" />} />
+              <Route path="/Home" element={<Home />} />
+              <Route path="/Profile/:id" element={<ProfileSpecific />} />
+              <Route
+                path="/Profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/Search" element={<Search />} />
+              <Route path="/Login" element={<Login />} />
+              <Route path="/Details/:did" element={<Details />} />
+              <Route
+                path={"/Admin/*"}
+                element={
+                  <ProtectedAdminRoute>
+                    <Admin />
+                  </ProtectedAdminRoute>
+                }
+              />
+            </Routes>
           </div>
-        </HashRouter>
-      </RootComponent>
-    </Provider>
+        </RootComponent>
+      </Provider>
+    </HashRouter>
   );
 }
 
