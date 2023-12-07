@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./styles.css"; // You can create your own CSS file for additional styling
 import * as userClient from "../MongoDBClients/usersClient";
-import {setCurrentUser} from "./reducer";
-import {useDispatch} from "react-redux";
+import { setCurrentUser } from "./reducer";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
   const navigate = useNavigate();
