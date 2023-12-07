@@ -16,24 +16,48 @@ function Home() {
   const [followingHighRatings, setFollowingHighRatings] = useState([]);
   const [highRatings, setHighRatings] = useState([]);
   const fetchRecentReviews = async () => {
-    const reviews = await fetchReviewData(false, false, false);
+    const reviews = await fetchReviewData(
+        false,
+        false,
+        false,
+        true,
+        false,
+    );
     setRecentReviews(reviews);
   };
   const fetchRecentFollowingReviews = async () => {
     if (currentUser) {
-      let reviews = await fetchReviewData(false, true, false);
+      let reviews = await fetchReviewData(
+        false,
+        true,
+        false,
+        true,
+        false,
+      );
       reviews = reviews.slice(0, 5);
       setRecentFollowingReviews(reviews);
     }
   };
   const fetchFollowingHighRatings = async () => {
     if (currentUser) {
-      const id_and_images = await fetchReviewData(true, true, true);
+      const id_and_images = await fetchReviewData(
+        true,
+        true,
+        true,
+        false,
+        true,
+      );
       setFollowingHighRatings(id_and_images);
     }
   };
   const fetchHighRatings = async () => {
-    const id_and_images = await fetchReviewData(true, false, true);
+    const id_and_images = await fetchReviewData(
+        true,
+        false,
+        true,
+        false,
+        true,
+    );
     setHighRatings(id_and_images);
   };
 
@@ -41,11 +65,20 @@ function Home() {
     removeDuplicatesByMovieId,
     onlyIncludeFollowing,
     getPoster,
+    sortByDate,
+    sortByRating,
   ) => {
     let reviews = await reviewClient.findAllReviews();
-    reviews = reviews.sort((a, b) => {
-      return new Date(b.createdAt) - new Date(a.createdAt);
-    });
+    if (sortByDate) {
+      reviews = reviews.sort((a, b) => {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+    }
+    if (sortByRating) {
+      reviews = reviews.sort((a, b) => {
+        return b.starRating - a.starRating;
+      });
+    }
     if (removeDuplicatesByMovieId) {
       reviews = reviews.reduce((accumulator, current) => {
         if (!accumulator.find((item) => item.movieId === current.movieId)) {
