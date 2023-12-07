@@ -21,18 +21,24 @@ function Details() {
   const [review, setReview] = useState(defaultReview);
   const [movie, setMovie] = useState({});
   const [movieReviews, setMovieReviews] = useState([]);
-  const fetchMovie = async () => {
+  const fetchMovie = async (save) => {
     const cachedMovie = await moviesClient.findMovieByOmdbID(did);
     console.log("Cached Movie: ", JSON.stringify(cachedMovie));
     if (cachedMovie == null) {
       const response = await omdbClient.findMovieById(did);
-      const savedMovie = await moviesClient.createMovie({
+      const movieObject = {
         title: response.Title,
         plot: response.Plot,
         poster: response.Poster,
         omdbId: did,
-      });
-      setMovie(savedMovie);
+      }
+      if (save) {
+        const savedMovieObject = await moviesClient.createMovie(movieObject);
+        console.log("Saved Movie: ", JSON.stringify(savedMovieObject));
+        setMovie(savedMovieObject);
+      } else {
+        setMovie(movieObject);
+      }
       setMovieReviews([]);
     } else {
       setMovie(cachedMovie);
@@ -51,7 +57,9 @@ function Details() {
       setReview(defaultReview);
       return;
     } else {
+      await fetchMovie(true);
       const cachedMovie = await moviesClient.findMovieByOmdbID(did);
+      console.log("Cached Movie: ", JSON.stringify(cachedMovie));
       await reviewClient.createReview(review, cachedMovie._id);
     }
     setReview(defaultReview);
