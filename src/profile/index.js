@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import "./index.css";
-import { FaUserAlt } from "react-icons/fa";
+import { FaCheckCircle, FaPlusCircle, FaUserAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Modal from "react-modal";
 import StatModal from "./statModal";
@@ -9,6 +9,8 @@ import * as reviewClient from "../MongoDBClients/reviewsClient.js";
 import { useSelector } from "react-redux";
 import * as reelsClient from "../MongoDBClients/reelsClient.js";
 import ReelModal from "./reelModal";
+import { setCurrentUser } from "../Login/reducer";
+import { useDispatch } from "react-redux";
 
 
 function generateReelCard(reel, setSelectedReel, setNewReelModalOpen) {
@@ -134,6 +136,8 @@ function Profile() {
   const [reviews, setReviews] = useState([]);
   const [reels, setReels] = useState([]);
 
+  const dispatch = useDispatch();
+
   const fetchReviews = async () => {
     const new_reviews = await reviewClient.findReviewsByUsername(
       currentUser.username,
@@ -144,8 +148,23 @@ function Profile() {
   const fetchReels = async () => {
     const all_reels = await reelsClient.findAllReels();
     const currentUserReelIds = currentUser.reels.map((reel) => reel._id);
+    console.log("fetching currentUser Reels ", currentUserReelIds)
     const new_reels = all_reels.filter(reel => currentUserReelIds.includes(reel._id));
     setReels(new_reels);
+  }
+
+  const createNewReel = async () => {
+    const newReel = await reelsClient.createReel({title : "New Reel", movies : []}, []);
+    console.log(newReel)
+
+    const userReels = currentUser.reels;
+    const reelArray = [...userReels, {_id: newReel._id}];
+    console.log("new reel array", reelArray)
+    
+    dispatch(setCurrentUser({...currentUser, reels : reelArray}));
+    console.log("new user", currentUser)
+    setReels([...reels, newReel]);
+  
   }
 
   const [recommendations, setRecommendations] = useState([
@@ -202,17 +221,6 @@ function Profile() {
       width: "50%",
       overflow: "auto", // scroll if content is too long
     },
-  };
-
-  const getRecent = (array) => {
-    let sorted = array.sort((a, b) => {
-      return new Date(b.createdAt) - new Date(a.createdAt);
-    });
-    if (sorted.length < 3) {
-      return sorted;
-    } else {
-      return sorted.slice(0, 3);
-    }
   };
 
   if (currentUser) {
@@ -304,7 +312,7 @@ function Profile() {
 
           <div className="row">
             <div className="col">
-              <h2 className="m-2"> Your Reels </h2>
+              <h2 className="m-2"> Your Reels <FaPlusCircle className="add-reels-btn mb-1" onClick={() => createNewReel()} /></h2>
               <div>
                 {reels.map((reel) => {
                   return generateReelCard(reel, setSelectedReel, setNewReelModalOpen);

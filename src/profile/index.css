@@ -96,3 +96,7 @@ body {
   text-shadow: #f1c40f 0 0 10px;
 
 }
+
+.add-reels-btn:hover {
+  color : green;
+}
