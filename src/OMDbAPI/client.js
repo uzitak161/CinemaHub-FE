@@ -9,6 +9,7 @@ export const findMovieById = async (movieId) => {
 };
 
 export const searchMoviesByTitle = async (term, filters) => {
+  console.log(filters);
   let url = `${BASE_API}s=${term}`;
   if (filters.year && filters.year.length > 0) {
     url += `&y=${filters.year}`;
