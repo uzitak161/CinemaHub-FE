@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import ItemComponent from "./ItemComponent";
 import Pagination from "./Pagination"; // Assuming you have a Pagination component
 
 const GridWithPagination = ({ handleSearch, items, type, totalItems }) => {
+  const { currentUser } = useSelector((state) => state.user);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; // Number of items to display per page
 
@@ -18,9 +20,9 @@ const GridWithPagination = ({ handleSearch, items, type, totalItems }) => {
     </div>
   ) : (
     <div className="container-fluid mt-4">
-      <div className="row mb-4">
+      <div className="row mb-4 justify-content-center">
         {items.map((item) => (
-          <ItemComponent key={item._id} item={item} type={type} />
+          <ItemComponent key={item._id} item={item} type={type} currentUser={currentUser} />
         ))}
       </div>
       <Pagination
