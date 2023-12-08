@@ -12,6 +12,11 @@ function NavBar() {
 
     const signout = async () => {
         await userClient.signout();
+        // reset results and totalItems when signing out
+        const searchState = JSON.parse(localStorage.getItem("searchState"));
+        searchState.results = [];
+        searchState.totalItems = 0;
+        localStorage.setItem('searchState', JSON.stringify(searchState));
         dispatch(setCurrentUser(null));
         navigate("/login");
     };
