@@ -21,7 +21,7 @@ function Details() {
     const [review, setReview] = useState(defaultReview);
     const [movie, setMovie] = useState({});
     const [movieReviews, setMovieReviews] = useState([]);
-    const fetchMovie = async (save) => {
+    const fetchMovie = async () => {
         const cachedMovie = await moviesClient.findMovieByOmdbID(did);
         console.log("Cached Movie: ", JSON.stringify(cachedMovie));
         if (cachedMovie == null) {
@@ -32,13 +32,9 @@ function Details() {
                 poster: response.Poster,
                 omdbId: did,
             }
-            if (save) {
-                const savedMovieObject = await moviesClient.createMovie(movieObject);
-                console.log("Saved Movie: ", JSON.stringify(savedMovieObject));
-                setMovie(savedMovieObject);
-            } else {
-                setMovie(movieObject);
-            }
+            const savedMovieObject = await moviesClient.createMovie(movieObject);
+            console.log("Saved Movie: ", JSON.stringify(savedMovieObject));
+            setMovie(savedMovieObject);
             setMovieReviews([]);
         } else {
             setMovie(cachedMovie);
@@ -57,7 +53,7 @@ function Details() {
             setReview(defaultReview);
             return;
         } else {
-            await fetchMovie(true);
+            await fetchMovie();
             const cachedMovie = await moviesClient.findMovieByOmdbID(did);
             console.log("Cached Movie: ", JSON.stringify(cachedMovie));
             await reviewClient.createReview(review, cachedMovie._id);
@@ -70,7 +66,7 @@ function Details() {
                 {movie && (
                     <div className={"container w-100 m-0 p-0"}>
                         <div className={"row w-100"}>
-                            <div className={"col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4"}>
+                            <div className={"col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4"}>
                                 <div className={"pe-3 d-block justify-content-center"}>
                                     <img
                                         src={movie.poster}
@@ -78,7 +74,7 @@ function Details() {
                                     />
                                 </div>
                             </div>
-                            <div className={"col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8"}>
+                            <div className={"col-12 col-sm-12 col-md-12 col-lg-8 col-xl-8"}>
                                 <div className={"d-flex flex-column"}>
                                     <div className={"text-center p-2"}>
                                         <h1 className={"wd-movie-title"}>{movie.title}</h1>
@@ -133,7 +129,7 @@ function Details() {
                         />
                     )}
                 </div>
-                <div>{currentUser !== "" && <Reels movieId={movie._id}/>}</div>
+                <div>{currentUser && currentUser.role !== "ADMIN" && <Reels movieId={movie._id}/>}</div>
             </div>
         </div>
     );
