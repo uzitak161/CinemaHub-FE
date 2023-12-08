@@ -48,7 +48,7 @@ function NavBar() {
                     <li className="nav-item">
                         {!currentUser &&
                             <Link key={"Login"} to={`/login`} className="nav-link">
-                                Login
+                                Login/SignUp
                             </Link>
                         }
                     </li>

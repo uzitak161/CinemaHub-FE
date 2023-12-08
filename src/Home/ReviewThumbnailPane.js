@@ -28,7 +28,7 @@ function ReviewThumbnailPane({pane_title, reviews}) {
                                     to={`/details/${review.movieId.omdbId}`}
                                     className={"text-decoration-none text-white"}
                                 >
-                                    <div className={"text-nowrap wd-font-size-large"}>
+                                    <div className={"text-nowrap wd-font-size-large text-truncate"}>
                                         {review.movieId.title}
                                     </div>
                                     <Link
@@ -38,7 +38,7 @@ function ReviewThumbnailPane({pane_title, reviews}) {
                                     >
                                         {review.username}
                                     </Link>
-                                    <div>{review.text}</div>
+                                    <div className={"text-truncate"}>{review.text}</div>
                                     <div className={"wd-star-rating"}>
                                         {Array.from({length: review.starRating}, (_, index) => (
                                             <span style={{color: "yellow"}} key={index}>
