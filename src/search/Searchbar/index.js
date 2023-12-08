@@ -24,7 +24,7 @@ const Searchbar = ({ onSearch, setSearchTerm, searchTerm, setSearchType, searchT
   return (
     <>
       <form className="wd-search-bar" onSubmit={handleSubmit}>
-        <CustomDropdown onSelect={setSearchType} />
+        <CustomDropdown onSelect={setSearchType} searchType={searchType}/>
         <input
           type="text"
           className="wd-search-input"
