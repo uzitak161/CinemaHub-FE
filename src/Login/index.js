@@ -41,7 +41,7 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // reset results and totalItems when signing in or signing up
-    const searchState = JSON.parse(localStorage.getItem("searchState"));
+    const searchState = JSON.parse(localStorage.getItem("searchState")) || {};
     searchState.results = [];
     searchState.totalItems = 0;
     localStorage.setItem('searchState', JSON.stringify(searchState));
