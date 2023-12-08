@@ -22,13 +22,14 @@ const GridWithPagination = ({ handleSearch, items, type, totalItems }) => {
     <div className="container-fluid mt-4">
       <div className="row mb-4 justify-content-center">
         {items.map((item) => (
-          <ItemComponent key={item._id} item={item} type={type} currentUser={currentUser} />
+          <ItemComponent key={item.username || item.imdbID} item={item} type={type} currentUser={currentUser} />
         ))}
       </div>
       <Pagination
         itemsPerPage={itemsPerPage}
         totalItems={totalItems}
         paginate={paginate}
+        currentPage={currentPage}
       />
     </div>
   );

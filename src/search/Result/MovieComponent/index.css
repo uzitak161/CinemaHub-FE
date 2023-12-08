@@ -1,0 +1,79 @@
+.wd-search-item-container {
+  margin: 10px;
+  position: relative;
+}
+
+.wd-search-item-container img {
+  width: 100%;
+  height: 100%;
+  transition: filter 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  /* Optional: Adds a subtle shadow for depth */
+  border: 1px solid #ccc;
+}
+
+.wd-search-item-container:hover img {
+  filter: brightness(50%);
+}
+
+.wd-search-item-container:hover .wd-movie-search-info {
+  opacity: 1;
+}
+
+.wd-movie-search-info {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.wd-movie-search-title {
+  padding: 0 15px;
+}
+
+.wd-movie-search-year {
+  font-size: 16px;
+}
+
+.wd-movie-reels-indicator {
+  color: r#0daeceed;
+  /* Color for the star icon */
+  position: absolute;
+  right: 15px;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.wd-reel-icon {
+  font-size: 30px;
+  /* Adjust icon size as needed */
+}
+
+.wd-inreel-tooltip {
+  visibility: hidden;
+  background-color: black;
+  color: white;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.wd-movie-reels-indicator:hover .wd-inreel-tooltip {
+  visibility: visible;
+}
+

@@ -18,3 +18,14 @@
 .page-link:hover {
   text-decoration: underline;
 }
+
+.pagination .page-item.active .page-link {
+  background-color: #007bff;
+  color: white;
+  /* Other styles for active page link */
+}
+
+.pagination .page-link[aria-disabled="true"] {
+  pointer-events: none;
+  /* Styles for disabled links */
+}
