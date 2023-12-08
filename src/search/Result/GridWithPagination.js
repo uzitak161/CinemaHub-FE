@@ -29,6 +29,7 @@ const GridWithPagination = ({ handleSearch, items, type, totalItems }) => {
         itemsPerPage={itemsPerPage}
         totalItems={totalItems}
         paginate={paginate}
+        currentPage={currentPage}
       />
     </div>
   );

@@ -19,33 +19,33 @@ const SearchComponent = () => {
       setSearchTerm(storedSearchState.searchTerm);
       setSearchType(storedSearchState.searchType);
       setFilters(storedSearchState.filters);
-      if (storedSearchState.results) {
+      if (storedSearchState.results && storedSearchState.searchTerm && storedSearchState.searchTerm.trim().length > 0) {
+        if (storedSearchState.results.length === 0) {
+          const pageNumber = storedSearchState.filters.pageNumber || 1;
+          handleSearch(pageNumber, storedSearchState.searchTerm, storedSearchState.searchType, storedSearchState.filters);
+          return;
+        }
         setResults(storedSearchState.results);
-        setTotalItems(storedSearchState.results.totalResults);
-      } else {
-        handleSearch(1, storedSearchState.searchTerm, storedSearchState.searchType, storedSearchState.filters);
+        setTotalItems(storedSearchState.totalItems);
       }
     }
   };
 
-  useEffect(() => {
-    initializeSearchAndFilters();
-  }, []);
 
   const handleSearchTermChange = (term) => {
-    localStorage.setItem('searchState', JSON.stringify({searchTerm: term, filters, searchType, results}));
+    localStorage.setItem('searchState', JSON.stringify({ searchTerm: term, filters, searchType, results, totalItems }));
     setSearchTerm(term);
   };
 
   const handleSearchTypeChange = (event) => {
-    localStorage.setItem('searchState', JSON.stringify({searchTerm, filters, searchType: event, results}));
+    localStorage.setItem('searchState', JSON.stringify({ searchTerm, filters, searchType: event, results, totalItems }));
     setSearchType(event);
     setResults([]);
     setTotalItems(0);
   }
 
   const handleFiltersChange = (filters) => {
-    localStorage.setItem('searchState', JSON.stringify({searchTerm, filters, searchType, results}));
+    localStorage.setItem('searchState', JSON.stringify({ searchTerm, filters, searchType, results, totalItems }));
     setFilters(filters);
   };
 
@@ -55,35 +55,42 @@ const SearchComponent = () => {
     if (trimmedSearchTerm.length === 0 && sendSearchType !== 'users') {
       return;
     }
-    const filtersWithPageNumber = { ...(givenSearchFilters || filters), pageNumber };
+    const filtersWithPage = { ...(givenSearchFilters || filters), pageNumber };
+    const sendFiltersWithPage = { ...filtersWithPage };
     if (sendSearchType === "users") {
       // Call function to search users
-      getUsersByNames(trimmedSearchTerm, filtersWithPageNumber).then(
+      getUsersByNames(trimmedSearchTerm, sendFiltersWithPage).then(
         (response) => {
-          localStorage.setItem('searchState', JSON.stringify({searchTerm, filters, searchType, results: response, totalItems: response.length}));
+          localStorage.setItem('searchState', JSON.stringify({ searchTerm: trimmedSearchTerm, filters: filtersWithPage, searchType, results: response, totalItems: response.length }));
           setResults(response);
           setTotalItems(response.length);
         },
       );
     } else {
       if (sendSearchType !== "media") {
-        filtersWithPageNumber.type = sendSearchType;
+        sendFiltersWithPage.type = sendSearchType;
       }
       // Call function to search movies
-      searchMoviesByTitle(trimmedSearchTerm, filtersWithPageNumber).then(
+      searchMoviesByTitle(trimmedSearchTerm, sendFiltersWithPage).then(
         (response) => {
           if (response.Response === "False") {
             alert(response.Error);
-            localStorage.setItem('searchState', JSON.stringify({searchTerm, filters, searchType, results: [], totalItems: 0}));
+            localStorage.setItem('searchState', JSON.stringify({ searchTerm: null, filters: filtersWithPage, searchType, results: [], totalItems: 0 }));
             return;
           }
-          localStorage.setItem('searchState', JSON.stringify({searchTerm, filters, searchType, results: response.Search, totalItems: response.totalResults}));
+          localStorage.setItem('searchState', JSON.stringify({ searchTerm: trimmedSearchTerm, filters: filtersWithPage, searchType, results: response.Search, 
+            totalItems: response.totalResults }));
           setResults(response.Search);
           setTotalItems(response.totalResults);
         },
       );
     }
   };
+
+  useEffect(() => {
+    initializeSearchAndFilters();
+  }, []);
+
 
   return (
     <div className='pt-3'>

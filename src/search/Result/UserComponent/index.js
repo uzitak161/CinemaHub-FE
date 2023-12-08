@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FaUserAlt, FaUser, FaUserFriends, FaUserCheck } from "react-icons/fa";
-
+import "./index.css";
 const UserComponent = ({ user, currentUser }) => {
     return (
         <Link to={`/profile/${user.username}`} className="p-0 m-0 text-decoration-none ">
@@ -30,10 +30,5 @@ const UserComponent = ({ user, currentUser }) => {
         </Link>
     );
 };
-
-// Generate a user card within the search results (center column)
-// function generateUserCard(user) {
-//     return UserList(user);
-// }
 
 export default UserComponent;
