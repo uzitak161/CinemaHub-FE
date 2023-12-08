@@ -8,41 +8,43 @@ import {
   FaVideo,
 } from "react-icons/fa";
 
-const CustomDropdown = ({ onSelect }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState({
+const options = [
+  {
     label: "Media",
     value: "media",
-  });
+    icon: <FaVideo className="wd-dropdown-img" />,
+  },
+  {
+    label: "Movies",
+    value: "movie",
+    icon: <FaFilm className="wd-dropdown-img" />,
+  },
+  {
+    label: "Series",
+    value: "series",
+    icon: <FaTv className="wd-dropdown-img" />,
+  },
+  {
+    label: "Episode",
+    value: "episode",
+    icon: <FaPlayCircle className="wd-dropdown-img" />,
+  },
+  {
+    label: "Profiles",
+    value: "users",
+    icon: <FaUser className="wd-dropdown-img" />,
+  },
+];
+
+const CustomDropdown = ({ onSelect, searchType }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(options[0]);
   const dropdownRef = useRef(null);
 
-  const options = [
-    {
-      label: "Media",
-      value: "media",
-      icon: <FaVideo className="wd-dropdown-img" />,
-    },
-    {
-      label: "Movies",
-      value: "movie",
-      icon: <FaFilm className="wd-dropdown-img" />,
-    },
-    {
-      label: "Series",
-      value: "series",
-      icon: <FaTv className="wd-dropdown-img" />,
-    },
-    {
-      label: "Episode",
-      value: "episode",
-      icon: <FaPlayCircle className="wd-dropdown-img" />,
-    },
-    {
-      label: "Profiles",
-      value: "users",
-      icon: <FaUser className="wd-dropdown-img" />,
-    },
-  ];
+  useEffect(() => {
+    const selected = options.find((option) => option.value === searchType);
+    setSelectedOption(selected);
+  }, [searchType]);
 
   const handleHoverOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
