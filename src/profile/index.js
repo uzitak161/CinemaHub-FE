@@ -243,7 +243,7 @@ function Profile() {
 
                   <div className="d-flex flex-column mx-2 stats">
                     <span className="">Reviews</span>
-                    <span className="number">{reviews.count}</span>
+                    <span className="number">{reviews.length}</span>
                   </div>
 
                   <div className="d-flex flex-column mx-2 stats">
@@ -302,16 +302,18 @@ function Profile() {
             </div>
           </div>
 
-          <div className="row">
-            <div className="col">
-              <h2 className="m-2"> Your Reels <FaPlusCircle className="add-reels-btn mb-1" onClick={() => createNewReel()} /></h2>
-              <div>
-                {reels.map((reel) => {
-                  return generateReelCard(reel, setSelectedReel, setNewReelModalOpen);
-                })}
+          {currentUser.role !== "ADMIN" && (
+            <div className="row">
+              <div className="col">
+                <h2 className="m-2"> Your Reels <FaPlusCircle className="add-reels-btn mb-1" onClick={() => createNewReel()} /></h2>
+                <div>
+                  {reels.map((reel) => {
+                    return generateReelCard(reel, setSelectedReel, setNewReelModalOpen);
+                  })}
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
 
         <div className="p-2 flex-grow-1 bd-highlight center-text">
