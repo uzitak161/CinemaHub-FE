@@ -43,7 +43,9 @@ const CustomDropdown = ({ onSelect, searchType }) => {
 
   useEffect(() => {
     const selected = options.find((option) => option.value === searchType);
-    setSelectedOption(selected);
+    if (selected) {
+      setSelectedOption(selected);
+    }
   }, [searchType]);
 
   const handleHoverOutside = (event) => {
