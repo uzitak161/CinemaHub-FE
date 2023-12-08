@@ -11,11 +11,11 @@ const MovieComponent = ({ movie, currentUser }) => {
                     <div className="wd-movie-search-title">{movie.Title}</div>
                     <div className="wd-movie-search-year">{movie.Year}</div>
                 </div>
-                {currentUser && movie.isInReels && (
+                {currentUser && currentUser.role !== "ADMIN" && movie.isInReels && (
                     <div className="wd-movie-reels-indicator">
-                        <FaStar className={"wd-reel-icon"} />
+                        <FaStar className={"wd-reel-icon" + (currentUser.username === movie.isInReels.username ? " wd-reel-icon-you" : " wd-reel-icon-other")} />
                         <div className="wd-inreel-tooltip">
-                            <span className='wd-inreel-tooltiptext'>{`In Reel: ${movie.isInReels.title}`}</span>
+                            <span className='wd-inreel-tooltiptext'>{`In ${currentUser.username !== movie.isInReels.username ? "Friend " : ""}Reel: ${movie.isInReels.title}`}</span>
                         </div>
                     </div>
                 )}
