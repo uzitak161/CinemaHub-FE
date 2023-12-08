@@ -7,6 +7,7 @@ import { FaTrash } from "react-icons/fa";
 function ReelModal({ setModal, selectedReel, reels, setReels }) {
     const [formData, setFormData] = useState(selectedReel);
 
+    const currentUser = (state) => state.currentUser;
     const dispatch = useDispatch();
 
     useEffect(() => {setFormData(selectedReel) }, []); // Empty dependency array ensures this effect runs only once on mount
@@ -19,6 +20,11 @@ function ReelModal({ setModal, selectedReel, reels, setReels }) {
             movies: formData.movies
         })
         console.log(formData)
+    }
+
+    const handleDeleteReel = async () => {
+        const response = await reelsClient.deleteReel(selectedReel._id);
+        setModal(false);
     }
 
     const handleChange = (e) => {
@@ -90,6 +96,7 @@ function ReelModal({ setModal, selectedReel, reels, setReels }) {
                     )}
                 </div>
                 <button className="float-end btn btn-success" onClick={handleSubmit}>Submit</button>
+                <button className="float-end btn btn-danger me-2" onClick={() => handleDeleteReel()}>Delete Reel</button>
             </div>
 
         </div>

@@ -9,7 +9,6 @@ import * as reviewClient from "../MongoDBClients/reviewsClient.js";
 import { useSelector } from "react-redux";
 import * as reelsClient from "../MongoDBClients/reelsClient.js";
 import ReelModal from "./reelModal";
-import { setCurrentUser } from "../Login/reducer";
 import { useDispatch } from "react-redux";
 
 
@@ -25,6 +24,7 @@ function generateReelCard(reel, setSelectedReel, setNewReelModalOpen) {
   const movies = reel.movies;
   return (
     <Link
+      // Reels Details Page?
       // to={`/details/${reel.omdbMovieId}`}
       style={{ textDecoration: "none" }}
       className="w-50"
@@ -154,17 +154,9 @@ function Profile() {
   }
 
   const createNewReel = async () => {
-    const newReel = await reelsClient.createReel({title : "New Reel", movies : []}, []);
-    console.log(newReel)
-
-    const userReels = currentUser.reels;
-    const reelArray = [...userReels, {_id: newReel._id}];
-    console.log("new reel array", reelArray)
-    
-    dispatch(setCurrentUser({...currentUser, reels : reelArray}));
-    console.log("new user", currentUser)
+    const newReel = await reelsClient.createReel({ title: "New Reel", movies: [] }, []);
     setReels([...reels, newReel]);
-  
+
   }
 
   const [recommendations, setRecommendations] = useState([
@@ -327,7 +319,9 @@ function Profile() {
             <div className="row">
               <div className="col">
                 <h2> All Reviews </h2>
-                {generateAllUserReviews(reviews)}
+                <div>
+                  {generateAllUserReviews(reviews)}
+                </div>
               </div>
             </div>
           </div>
