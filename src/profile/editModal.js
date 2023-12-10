@@ -28,6 +28,15 @@ function EditModal({ setModal, account }) {
     
   };
 
+  function mouseoverPass() {
+    let obj = document.getElementById('myPassword');
+    obj.type = 'text';
+  }
+  function mouseoutPass() {
+    let obj = document.getElementById('myPassword');
+    obj.type = 'password';
+  }
+
   return (
     <div className="container mt-5">
       <h1>Edit Profile</h1>
@@ -54,10 +63,12 @@ function EditModal({ setModal, account }) {
           <input
             type="password"
             className="form-control"
-            id="password"
+            id="myPassword"
             name="password"
             value={formData.password}
             onChange={handleChange}
+            onPointerOver={mouseoverPass}
+            onPointerOut={mouseoutPass}
           />
         </div>
 
