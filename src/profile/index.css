@@ -100,3 +100,15 @@ body {
 .add-reels-btn:hover {
   color : green;
 }
+
+.center-all {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.reels-title {
+  text-align: center !important;
+  font-weight: bold;
+}

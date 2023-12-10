@@ -50,9 +50,9 @@ function ReelModal({ setModal, selectedReel, reels, setReels }) {
         <div className="container mt-2">
             <h1 className="text-center">Editing Reel "{selectedReel.title}"</h1>
             <div>
-                <div className="mb-3">
+                <div className="my-2">
                     <label htmlFor="title" className="form-label">
-                        Title:
+                        <h5>Title: </h5>
                     </label>
                     <input
                         type="text"
@@ -65,20 +65,7 @@ function ReelModal({ setModal, selectedReel, reels, setReels }) {
                     />
                 </div>
 
-                <div className="mb-3">
-                    <label htmlFor="description" className="form-label">
-                        Description:
-                    </label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="description"
-                        name="description"
-                        value="placeholder"
-                        // onChange={handleChange}
-                        required
-                    />
-                </div>
+                <h5> Movies: </h5>
 
                 <div className="mb-3 list-group">
                     {formData.movies.map(

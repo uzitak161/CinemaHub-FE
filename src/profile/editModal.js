@@ -62,20 +62,6 @@ function EditModal({ setModal, account }) {
         </div>
 
         <div className="mb-3">
-          <label htmlFor="email" className="form-label">
-            Email:
-          </label>
-          <input
-            type="email"
-            className="form-control"
-            id="email"
-            name="email"
-            value="placeholder@gmail.com"
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="mb-3">
           <textarea
             name="bio"
             rows="4"

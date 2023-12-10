@@ -23,13 +23,8 @@ function generateReelCard(reel, setSelectedReel, setNewReelModalOpen) {
 
   const movies = reel.movies;
   return (
-    <Link
-      // Reels Details Page?
-      // to={`/details/${reel.omdbMovieId}`}
-      style={{ textDecoration: "none" }}
-      className="w-50"
-    >
-      <div className="card w-50">
+
+      <div className="card w-75 my-3">
         <div className="card-body">
           <h5 className="card-title">{reel.title}
             <button onClick={handleEdit} className="float-end btn btn-outline-secondary">
@@ -50,7 +45,6 @@ function generateReelCard(reel, setSelectedReel, setNewReelModalOpen) {
           </div>
         </div>
       </div>
-    </Link>
   );
 }
 
@@ -61,37 +55,6 @@ function generateAllUserReviews(reviews) {
         return generateReviewCard(review);
       })}
     </div>
-  );
-}
-
-function generateRecommendations(reccomendations) {
-  return (
-    <div>
-      {reccomendations.map((reccomendation) => {
-        return generateRecommendationCard(reccomendation);
-      })}
-    </div>
-  );
-}
-
-function generateRecommendationCard(reccomendation) {
-  return (
-    <Link
-      to={`/details/${reccomendation.omdbMovieId}`}
-      style={{ textDecoration: "none" }}
-      className=""
-    >
-      <div className="card">
-        <div className="card-body">
-          <h5 className="card-title">{reccomendation.title}</h5>
-          <h6 className="card-subtitle mb-2 text-muted">
-            Average Rating: {reccomendation.rating}{" "}
-            <span className="stars">★</span>
-          </h6>
-          <p className="card-text">{reccomendation.description}</p>
-        </div>
-      </div>
-    </Link>
   );
 }
 
@@ -159,44 +122,17 @@ function Profile() {
 
   }
 
-  const [recommendations, setRecommendations] = useState([
-    {
-      movieTitle: "Pulp Fiction",
-      avg_rating: 4.78,
-      description: "Movie Description",
-    },
-    {
-      movieTitle: "Pulp Fiction",
-      avg_rating: 4.78,
-      description: "Movie Description",
-    },
-  ]);
-
   // State vars to control Modals
   const [statModalOpen, setStatModalOpen] = useState(false);
   const [EditModalOpen, setEditModalOpen] = useState(false);
   const [newReelModalOpen, setNewReelModalOpen] = useState(false);
   const [selectedReel, setSelectedReel] = useState(null);
 
-  const getRecommendations = async () => {
-    let reviews = await reviewClient.findAllReviews();
-    reviews = reviews.sort((a, b) => {
-      return b.rating - a.rating;
-    });
-    let recs = [];
-    if (reviews.length > 3) {
-      recs = reviews.slice(0, 3);
-    } else {
-      recs = reviews;
-    }
-    setRecommendations(recs);
-  };
 
   // Lookup the users profile image if they have one (optional)
   const image = undefined;
 
   useEffect(() => {
-    getRecommendations();
     fetchReviews();
     fetchReels();
   }, [newReelModalOpen]);
@@ -218,9 +154,9 @@ function Profile() {
   if (currentUser) {
     return (
       <div className="d-flex bd-highlight">
-        <div className="p-2  bd-highlight">
-          <div className="row">
-            <div className="col">
+        <div className="col-6 p-2 bd-highlight">
+          <div className="">
+            <div className="">
               <div className="bio-area form-group">
                 {image ? (
                   image
@@ -296,17 +232,13 @@ function Profile() {
                 ></textarea>
               </div>
             </div>
-            <div className="col">
-              <h2> Reccomendations </h2>
-              {generateRecommendations(recommendations)}
-            </div>
           </div>
 
           {currentUser.role !== "ADMIN" && (
-            <div className="row">
-              <div className="col">
-                <h2 className="m-2"> Your Reels <FaPlusCircle className="add-reels-btn mb-1" onClick={() => createNewReel()} /></h2>
-                <div>
+            <div className="">
+              <div className="">
+                <h2 className="mt-3 reels-title"> Your Reels <FaPlusCircle className="add-reels-btn mb-1" onClick={() => createNewReel()} /></h2>
+                <div className="center-all flex-column my-2">
                   {reels.map((reel) => {
                     return generateReelCard(reel, setSelectedReel, setNewReelModalOpen);
                   })}
@@ -316,7 +248,7 @@ function Profile() {
           )}
         </div>
 
-        <div className="p-2 flex-grow-1 bd-highlight center-text">
+        <div className="p-2 col-6 bd-highlight center-text">
           <div className="container-fluid">
             <div className="row">
               <div className="col">
