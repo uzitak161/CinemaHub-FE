@@ -151,10 +151,6 @@ function ProfileSpecific() {
   }, [id, following, navigate]);
 
   const handleFollow = async () => {
-    if (!currentUser) {
-      navigate("/login");
-      return;
-    }
     following
       ? await userClient.unfollowUser(account.username)
       : await userClient.followUser(account.username);
@@ -174,7 +170,7 @@ function ProfileSpecific() {
                 style={{ textDecocation: "none" }}
               />
             )}
-            <div>
+            {currentUser ? <div>
               {following ? (
                 <button onClick={handleFollow} className="btn btn-danger mt-2">
                   Unfollow
@@ -184,7 +180,7 @@ function ProfileSpecific() {
                   Follow
                 </button>
               )}
-            </div>
+            </div> : <div></div>}
             <div
               onClick={() => setModalOpen(true)}
               className="p-2 mt-2 bg-primary d-flex justify-content-between rounded text-white stats"
