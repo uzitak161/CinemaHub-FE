@@ -151,6 +151,10 @@ function ProfileSpecific() {
   }, [id, following, navigate]);
 
   const handleFollow = async () => {
+    if (!currentUser) {
+      navigate("/login");
+      return;
+    }
     following
       ? await userClient.unfollowUser(account.username)
       : await userClient.followUser(account.username);
