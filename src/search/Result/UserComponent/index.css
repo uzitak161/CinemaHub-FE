@@ -1,0 +1,56 @@
+.wd-user-item {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.wd-avatar-pic {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+}
+
+.wd-profile-pic {
+    width: 50px;
+    /* Adjust size as needed */
+    height: 50px;
+    /* Adjust size as needed */
+    border-radius: 50%;
+    /* Circular profile pictures */
+    margin-right: 15px;
+}
+
+.wd-user-details {
+    flex-grow: 1;
+}
+
+.wd-username {
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.wd-role {
+    font-style: italic;
+    color: #666;
+}
+
+.wd-social-info {
+    margin-top: 5px;
+    color: #666;
+}
+
+.wd-social-info span {
+    margin-right: 10px;
+}
+
+.wd-relation-icon {
+    margin-left: 10px;
+    color: #007bff;
+    /* Adjust the color as needed */
+    font-size: 16px;
+    /* Adjust the size as needed */
+}

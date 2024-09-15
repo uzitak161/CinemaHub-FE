@@ -1,27 +1,14 @@
 import { useState, useEffect } from "react";
+import { setCurrentUser } from "../Login/reducer";
+import * as userClient from "../MongoDBClients/usersClient.js";
+import { useDispatch } from "react-redux";
 
-function EditModal({ setModal }) {
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-    email: "",
-    role: "USER",
-  });
+function EditModal({ setModal, account }) {
+  const [formData, setFormData] = useState(account);
 
-  useEffect(() => {
-    // Fetch user data from your backend and populate the form fields
-    // Example using fetch:
-    fetch("/api/user-profile")
-      .then((response) => response.json())
-      .then((data) => {
-        setFormData({
-          username: data.username,
-          email: data.email,
-          role: data.role,
-        });
-      })
-      .catch((error) => console.error("Error:", error));
-  }, []); // Empty dependency array ensures this effect runs only once on mount
+  const dispatch = useDispatch();
+
+  useEffect(() => {}, []); // Empty dependency array ensures this effect runs only once on mount
 
   const handleChange = (e) => {
     setFormData({
@@ -30,34 +17,30 @@ function EditModal({ setModal }) {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Send the form data to your backend using fetch or another AJAX method
-    // Example using fetch:
-    fetch("/api/update-profile", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // Handle the response from the server
-        console.log(data);
-        // You can redirect the user or show a success message here
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        // Handle errors, show error messages, etc.
-      });
+    const response = await userClient.updateUser(account.username, formData);
+    console.log(response)
+    if (response) {
+      dispatch(setCurrentUser(response));
+    }
+    setModal(false);
+    
   };
+
+  function mouseoverPass() {
+    let obj = document.getElementById('myPassword');
+    obj.type = 'text';
+  }
+  function mouseoutPass() {
+    let obj = document.getElementById('myPassword');
+    obj.type = 'password';
+  }
 
   return (
     <div className="container mt-5">
       <h1>Edit Profile</h1>
-      <form onSubmit={handleSubmit}>
+      <form>
         <div className="mb-3">
           <label htmlFor="username" className="form-label">
             Username:
@@ -80,38 +63,33 @@ function EditModal({ setModal }) {
           <input
             type="password"
             className="form-control"
-            id="password"
+            id="myPassword"
             name="password"
             value={formData.password}
             onChange={handleChange}
-          />
-        </div>
-
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">
-            Email:
-          </label>
-          <input
-            type="email"
-            className="form-control"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
+            onPointerOver={mouseoverPass}
+            onPointerOut={mouseoutPass}
           />
         </div>
 
         <div className="mb-3">
           <textarea
+            name="bio"
             rows="4"
             className="form-control my-2"
             cols="50"
             placeholder="Enter your bio here..."
+            value={formData.bio}
+            onChange={handleChange}
           ></textarea>
         </div>
 
         <div className="float-end mt-3">
-          <button type="submit" className="btn btn-primary">
+          <button
+            type="submit"
+            className="btn btn-primary"
+            onClick={handleSubmit}
+          >
             Save Changes
           </button>
           <button

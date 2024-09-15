@@ -3,7 +3,41 @@ import { FaUserAlt } from "react-icons/fa";
 import "../index.css";
 import Modal from "react-modal";
 import StatModal from "../statModal";
-import axios from "axios";
+import * as clientUser from "../../MongoDBClients/usersClient";
+import * as reviewClient from "../../MongoDBClients/reviewsClient.js";
+import { useParams } from "react-router-dom";
+import * as userClient from "../../MongoDBClients/usersClient";
+import { useSelector } from "react-redux";
+import { useNavigate, Link } from "react-router-dom";
+import * as reelsClient from "../../MongoDBClients/reelsClient";
+
+
+function generateReelCard(reel) {
+
+
+  const movies = reel.movies;
+  return (
+
+    <div className="card w-75 my-3">
+      <div className="card-body">
+        <h5 className="card-title">{reel.title}</h5>
+        <h6 className="card-subtitle my-3 text-muted">
+          Movies in Reel:
+        </h6>
+        <div className="card-text list-group">
+          {movies.map((movie) => {
+            return (
+              <Link to={`/details/${movie.omdbId}`} style={{ textDecoration: "none" }}>
+                <p className="list-group-item border rounded reel-movie"><b>{movie.title}</b></p>
+              </Link>)
+          }
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
 function generateAllUserReviews(reviews) {
   return (
@@ -34,7 +68,9 @@ function generateReviewCard(review) {
   return (
     <div className="card">
       <div className="card-body">
-        <h5 className="card-title">{review.movieId.title}</h5>
+        <Link to={`/details/${review.movieId.omdbId}`} className="movie-links">
+          <h5 className="card-title movie-links">{review.movieId.title}</h5>
+        </Link>
         <h6 className="card-subtitle mb-2 text-muted">
           {Array.from({ length: review.starRating }, (_, index) => (
             <span className="stars" key={index}>
@@ -50,28 +86,40 @@ function generateReviewCard(review) {
 }
 
 function ProfileSpecific() {
-  const user = {
-    username: "Specific User",
-    followers: 10,
-    following: 20,
-    reviews: 30,
-    image: undefined,
+  const { currentUser } = useSelector((state) => state.user);
+
+  const { id } = useParams();
+  const [account, setAccount] = useState(undefined);
+  const [reviews, setReviews] = useState([]);
+  const [following, setFollowing] = useState(
+    currentUser ? currentUser.following.includes(id) : false,
+  );
+  const [reels, setReels] = useState([]);
+
+  const navigate = useNavigate();
+
+  const fetchAccount = async () => {
+    const new_account = await clientUser.findUserByUsername(id);
+    setAccount(new_account);
+    const reelIds = new_account.reels;
+    const new_reels = await Promise.all(
+      reelIds.map((reel) => reelsClient.findReelById(reel._id)),
+    );
+    setReels(new_reels);
+    console.log(new_reels)
+
   };
 
-  // This is temporary, will eventually use redux to store Login status
-  const [loggedIn, setStatus] = useState(true);
-  const [reviews, setReviews] = useState([
-    { movieTitle: "Pulp Fiction", rating: 5, review: "This movie was great!" },
-    { movieTitle: "Pulp Fiction", rating: 5, review: "This movie was great!" },
-  ]);
+  const fetchReviews = async () => {
+    const new_reviews = await reviewClient.findReviewsByUsername(id);
+    setReviews(new_reviews);
+  };
+
+  // Modal open status
   const [modalOpen, setModalOpen] = useState(false);
 
   // Lookup the users profile image if they have one (optional)
   const image = undefined;
-
-  const followers = 10;
-  const reviewCount = 20;
-  const following = 30;
 
   const modalStyle = {
     content: {
@@ -87,79 +135,106 @@ function ProfileSpecific() {
     },
   };
 
-  const getRecent = (array) => {
-    if (array.length < 3) {
-      return array;
-    } else {
-      return array.slice(0, 3);
-    }
-  };
 
-  const getReviews = async () => {
-    const URL = "http://localhost:4000/api/comments";
-    const response = await axios.get(URL);
-    setReviews(response.data);
+  const handleStatModalClose = () => {
+    setModalOpen(false);
+    fetchAccount();
   };
 
   useEffect(() => {
-    getReviews();
-  }, []);
+    // Navigate to profile if the user is viewing their own profile
+    if (currentUser.username === id) {
+      navigate("/profile");
+    }
+    fetchAccount();
+    fetchReviews();
+  }, [id, following, navigate]);
 
-  return (
-    <div className="row">
-      <div className="col">
-        <div className="bio-area form-group">
-          {image ? (
-            image
-          ) : (
-            <FaUserAlt
-              className="avatar nohover"
-              style={{ textDecocation: "none" }}
-            />
-          )}
-          <div
-            onClick={() => setModalOpen(true)}
-            className="p-2 mt-2 bg-primary d-flex justify-content-between rounded text-white stats"
-          >
-            <div className="d-flex flex-column mx-2 stats">
-              <span className="">Followers</span>
-              <span className="number">{followers}</span>
+  const handleFollow = async () => {
+    following
+      ? await userClient.unfollowUser(account.username)
+      : await userClient.followUser(account.username);
+    setFollowing(!following);
+  };
+
+  if (account) {
+    return (
+      <div className="row">
+        <div className="col">
+          <div className="bio-area form-group">
+            {image ? (
+              image
+            ) : (
+              <FaUserAlt
+                className="avatar nohover"
+                style={{ textDecocation: "none" }}
+              />
+            )}
+            {currentUser ? <div>
+              {following ? (
+                <button onClick={handleFollow} className="btn btn-danger mt-2">
+                  Unfollow
+                </button>
+              ) : (
+                <button onClick={handleFollow} className="btn btn-success mt-2">
+                  Follow
+                </button>
+              )}
+            </div> : <div></div>}
+            <div
+              onClick={() => setModalOpen(true)}
+              className="p-2 mt-2 bg-primary d-flex justify-content-between rounded text-white stats"
+            >
+              <div className="d-flex flex-column mx-2 stats">
+                <span className="">Followers</span>
+                <span className="number">{account.followers.length}</span>
+              </div>
+
+              <div className="d-flex flex-column mx-2 stats">
+                <span className="">Reviews</span>
+                <span className="number">{reviews.length}</span>
+              </div>
+
+              <div className="d-flex flex-column mx-2 stats">
+                <span className="">Following</span>
+                <span className="number">{account.following.length}</span>
+              </div>
             </div>
-
-            <div className="d-flex flex-column mx-2 stats">
-              <span className="">Reviews</span>
-              <span className="number">{reviewCount}</span>
-            </div>
-
-            <div className="d-flex flex-column mx-2 stats">
-              <span className="">Following</span>
-              <span className="number">{following}</span>
+            <Modal
+              isOpen={modalOpen}
+              onRequestClose={() => handleStatModalClose()}
+              style={modalStyle}
+            >
+              <StatModal setModal={setModalOpen} account={account} />
+            </Modal>
+            <h3 className="mt-2">{account.username}</h3>
+            <textarea
+              name="bio"
+              readOnly
+              rows="4"
+              className="form-control my-2"
+              cols="50"
+              placeholder={`${account.username} has not made a bio yet.`}
+              value={account.bio}
+            ></textarea>
+          </div>
+          <div className="mx-3">
+            <h2 className="reels-title"> {account.username}'s Reels </h2>
+            <div className="center-all flex-column my-2">
+              {reels.map((reel) => { return generateReelCard(reel) })}
             </div>
           </div>
-          <Modal
-            isOpen={modalOpen}
-            onRequestClose={() => setModalOpen(false)}
-            style={modalStyle}
-          >
-            <StatModal setModal={setModalOpen} />
-          </Modal>
-          <h3 className="mt-2">{user.username}</h3>
-          <textarea
-            readOnly
-            rows="4"
-            className="form-control my-2"
-            cols="50"
-            placeholder="Enter your bio here..."
-            value="Specific User's bio "
-          ></textarea>
+        </div>
+
+        <div className="col p-2 mx-4 flex-grow-1 bd-highlight center-text">
+          <h2> {account.username}'s Reviews </h2>
+          {generateAllUserReviews(reviews)}
         </div>
       </div>
-      <div className="col">
-        <h2> {user.username}'s Reviews </h2>
-        {generateAllUserReviews(getRecent(reviews))}
-      </div>
-    </div>
-  );
+    );
+  } else {
+    return <div>User Does not exist</div>;
+  }
 }
 
 export default ProfileSpecific;

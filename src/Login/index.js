@@ -1,39 +1,71 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./styles.css"; // You can create your own CSS file for additional styling
-import * as userClient from "../MongoDBClients/Users/client";
+import * as userClient from "../MongoDBClients/usersClient";
+import { setCurrentUser } from "./reducer";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(true);
-  const [error, setError] = useState("");
+  const [userRole, setUserRole] = useState("USER");
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
   });
   const signIn = async () => {
-    await userClient.signin(credentials);
-    navigate("/home");
+    const response = await userClient.signin(credentials);
+    if (response) {
+      dispatch(setCurrentUser(response));
+      navigate("/home");
+    } else {
+      alert("Username or password incorrect");
+    }
   };
   const signUp = async () => {
     try {
       console.log("Signing up");
-      await userClient.signup(credentials);
+      const user = { ...credentials, role: userRole };
+      const response = await userClient.signup(user);
+      dispatch(setCurrentUser(response));
       navigate("/home");
     } catch (err) {
-      setError(err.response.data);
+      alert("Username already taken");
+      setCredentials({
+        username: "",
+        password: "",
+      });
     }
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+    // reset results and totalItems when signing in or signing up
+    const searchState = JSON.parse(localStorage.getItem("searchState")) || {};
+    searchState.results = [];
+    searchState.totalItems = 0;
+    localStorage.setItem('searchState', JSON.stringify(searchState));
+
     if (isLogin) {
       signIn();
     } else {
       signUp();
     }
   };
+
+  const handleUserRoleRadioChange = (e) => {
+    console.log(e.target.id);
+    if (e.target.id === "userRadio") {
+      setUserRole("USER");
+      console.log("User role set to USER");
+    } else {
+      setUserRole("ADMIN");
+      console.log("User role set to ADMIN");
+    }
+    console.log(userRole);
+  };
   return (
-    <div className="container-fluid mt-5 main-login">
+    <div>
       <div className="row justify-content-center">
         <div className="col-md-6">
           <div className="card">
@@ -76,13 +108,48 @@ const Login = () => {
                     required
                   />
                 </div>
+                {!isLogin && (
+                  <div>
+                    <div className="form-check">
+                      <label className="form-check-label" htmlFor={"userRadio"}>
+                        User
+                      </label>
+                      <input
+                        className="form-check-input"
+                        type="radio"
+                        id="userRadio"
+                        name={"roleRadio"}
+                        onClick={handleUserRoleRadioChange}
+                        defaultChecked
+                      ></input>
+                    </div>
+                    <div className="form-check">
+                      <label
+                        className="form-check-label"
+                        htmlFor={"adminRadio"}
+                      >
+                        Admin
+                      </label>
+                      <input
+                        className="form-check-input"
+                        type="radio"
+                        id="adminRadio"
+                        name={"roleRadio"}
+                        onClick={handleUserRoleRadioChange}
+                      ></input>
+                    </div>
+                  </div>
+                )}
                 <button type="submit" className="btn btn-primary btn-block">
                   {isLogin ? "Login" : "Sign Up"}
                 </button>
               </form>
               <p className="text-center mt-3">
                 {isLogin ? "New user? " : "Already have an account? "}
-                <span className="link" onClick={() => setIsLogin(!isLogin)}>
+                <span
+                  className="btn bg-secondary"
+                  onClick={() => setIsLogin(!isLogin)}
+                >
                   {isLogin ? "Sign up" : "Login"}
                 </span>
               </p>

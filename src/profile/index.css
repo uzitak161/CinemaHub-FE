@@ -80,3 +80,35 @@ body {
 .avatar.nohover {
   color: black;
 }
+
+.movie-links {
+  text-decoration: none;
+  color: black;
+}
+
+.movie-links:hover {
+  color: darkgoldenrod;
+}
+
+.reel-movie:hover {
+  border-color: #f1c40f !important;
+  text-emphasis: bold;
+  text-shadow: #f1c40f 0 0 10px;
+
+}
+
+.add-reels-btn:hover {
+  color : green;
+}
+
+.center-all {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.reels-title {
+  text-align: center !important;
+  font-weight: bold;
+}
